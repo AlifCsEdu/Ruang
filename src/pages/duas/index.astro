@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import DuaSearch from '../../components/duas/DuaSearch.svelte';
+
+const duas = await getCollection('duas');
+
+// Get unique categories
+const categories = [...new Set(duas.map((d) => d.data.category))].sort();
+---
+
+<BaseLayout title="Duas — Ruang">
+  <div class="max-w-3xl mx-auto px-4 py-8" transition:name="page-duas">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-black uppercase tracking-wider">Duas</h1>
+      <p class="text-sm font-bold text-ink/60 mt-1">Daily supplications from Hisnul Muslim</p>
+    </div>
+
+    <!-- Client-side search (Svelte 5 island) -->
+    <DuaSearch client:load categories={categories}>
+      <div class="animate-pulse py-4">
+        <div class="h-12 bg-ink/10 border-4 border-ink"></div>
+      </div>
+    </DuaSearch>
+
+    <!-- Duas List (server-rendered, zero JS) -->
+    <div class="flex flex-col gap-4 mt-6" id="duas-list">
+      {duas.map((dua) => (
+        <div class="card-brutal" data-category={dua.data.category} data-id={dua.id}>
+          <!-- Header -->
+          <div class="flex items-center justify-between mb-3 border-b-2 border-ink/10 pb-2">
+            <div>
+              <h2 class="font-black text-sm uppercase tracking-wider">{dua.data.title}</h2>
+              <span class="badge-brutal bg-accent-pink/20 text-xs mt-1">{dua.data.category}</span>
+            </div>
+            <span class="arabic-text text-lg leading-none" dir="rtl" style="line-height: 1.5;">{dua.data.titleAr}</span>
+          </div>
+
+          <!-- Arabic -->
+          <div class="arabic-text mb-4 bg-canvas/50 p-4 border-2 border-ink/10" dir="rtl">
+            {dua.data.arabic}
+          </div>
+
+          <!-- Transliteration -->
+          <p class="text-sm font-bold text-ink/60 italic mb-2">{dua.data.transliteration}</p>
+
+          <!-- Translation -->
+          <p class="text-sm text-ink/80 mb-3">{dua.data.translation}</p>
+
+          <!-- Reference -->
+          <div class="text-xs text-ink/40 font-bold border-t border-ink/10 pt-2">
+            Reference: {dua.data.reference}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,33 @@
+---
+interface Props {
+  variant?: 'default' | 'blue' | 'yellow' | 'pink' | 'green';
+  size?: 'sm' | 'md';
+  class?: string;
+}
+
+const {
+  variant = 'default',
+  size = 'md',
+  class: className = '',
+} = Astro.props;
+
+const variantStyles: Record<string, string> = {
+  default: 'bg-white',
+  blue: 'bg-accent-blue text-white',
+  yellow: 'bg-accent-yellow text-ink',
+  pink: 'bg-accent-pink text-white',
+  green: 'bg-accent-green text-white',
+};
+
+const sizeStyles: Record<string, string> = {
+  sm: 'px-2 py-0.5 text-xs border-2',
+  md: 'px-3 py-1 text-sm border-2',
+};
+
+const baseStyles = 'inline-block font-bold border-ink uppercase tracking-wider';
+const classes = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
+---
+
+<span class={classes}>
+  <slot />
+</span>

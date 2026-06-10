@@ -1,0 +1,1 @@
+import{t as a}from"./disclose-version.CF9Hz38C.js";import{aa as t,h as i}from"./render.CRomNhG5.js";globalThis.process??={};globalThis.process.env??={};function b(s,e,p,l){var o=s[t];if(i||o!==e){var r=a(e);(!i||r!==s.getAttribute("style"))&&(r==null?s.removeAttribute("style"):s.style.cssText=r),s[t]=e}return l}export{b as s};

@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HadithList from '../../components/hadith/HadithList.svelte';
+
+const { collection } = Astro.params;
+
+const COLLECTION_NAMES: Record<string, string> = {
+  bukhari: 'Sahih al-Bukhari',
+  muslim: 'Sahih Muslim',
+  abudawud: "Sunan Abu Dawud",
+  tirmidhi: "Jami' at-Tirmidhi",
+  nasai: "Sunan an-Nasa'i",
+  ibnmajah: 'Sunan Ibn Majah',
+  malik: 'Muwatta Malik',
+};
+
+const title = COLLECTION_NAMES[collection ?? ''] ?? 'Hadith';
+const isValid = collection && collection in COLLECTION_NAMES;
+---
+
+<BaseLayout title={`${title} — Hadith`}>
+  <div class="max-w-3xl mx-auto px-4 py-8 pb-20" transition:name="page-hadith">
+    <!-- Navigation -->
+    <div class="flex items-center justify-between mb-6">
+      <a href="/hadith" class="btn-brutal-sm text-sm">← Koleksi</a>
+    </div>
+
+    <!-- Header -->
+    <div class="card-brutal mb-8">
+      <h1 class="text-2xl font-black uppercase tracking-wider">{title}</h1>
+      <p class="text-sm font-bold text-ink/60 mt-2">
+        {isValid
+          ? 'Browse hadiths with search, pagination, and infinite scroll.'
+          : 'Collection not found.'}
+      </p>
+    </div>
+
+    {isValid ? (
+      <HadithList client:load collection={collection!}>
+        <div class="text-center py-12 animate-pulse">
+          <p class="font-black text-ink/40 uppercase tracking-wider">Loading hadiths...</p>
+        </div>
+      </HadithList>
+    ) : (
+      <div class="card-brutal text-center py-8">
+        <p class="font-black text-ink/40 uppercase tracking-wider">
+          Koleksi tidak dijumpai
+        </p>
+        <a href="/hadith" class="btn-brutal-sm mt-4 inline-block">← Kembali</a>
+      </div>
+    )}
+  </div>
+</BaseLayout>

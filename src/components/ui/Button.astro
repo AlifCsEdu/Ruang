@@ -1,0 +1,43 @@
+---
+interface Props {
+  variant?: 'primary' | 'secondary' | 'accent' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+}
+
+const {
+  variant = 'primary',
+  size = 'md',
+  href,
+  type = 'button',
+  class: className = '',
+} = Astro.props;
+
+const variantStyles: Record<string, string> = {
+  primary: 'bg-white hover:bg-accent-yellow',
+  secondary: 'bg-canvas hover:bg-white',
+  accent: 'bg-accent-blue text-white hover:bg-accent-blue/90',
+  danger: 'bg-accent-pink text-white hover:bg-accent-pink/90',
+};
+
+const sizeStyles: Record<string, string> = {
+  sm: 'px-3 py-1.5 text-sm border-2 shadow-[4px_4px_0px_0px_#0D0D0D] active:translate-x-0.5 active:translate-y-0.5',
+  md: 'px-6 py-3 text-base border-4 shadow-[8px_8px_0px_0px_#0D0D0D] active:translate-x-1 active:translate-y-1',
+  lg: 'px-8 py-4 text-lg border-4 shadow-[8px_8px_0px_0px_#0D0D0D] active:translate-x-1 active:translate-y-1',
+};
+
+const baseStyles = 'inline-flex items-center justify-center font-bold border-ink transition-all duration-75 focus:outline-none focus:ring-4 focus:ring-accent-blue active:shadow-none cursor-pointer';
+const classes = `${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${className}`;
+---
+
+{href ? (
+  <a href={href} class={classes}>
+    <slot />
+  </a>
+) : (
+  <button type={type} class={classes}>
+    <slot />
+  </button>
+)}

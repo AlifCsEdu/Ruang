@@ -1,0 +1,71 @@
+---
+import '../styles/global.css';
+import Navbar from '../components/layout/Navbar.astro';
+import Sidebar from '../components/layout/Sidebar.astro';
+import BottomNav from '../components/layout/BottomNav.astro';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Ruang — Your Muslim Companion' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="Ruang — An all-in-one Muslim web app for Malaysian users. Prayer times, Al-Quran, Hadith, Duas, and more." />
+    <meta name="theme-color" content="#F8F5F2" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon-192.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/icon-192.svg" />
+
+    <title>{title}</title>
+
+    <!-- Preconnect for Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Inter font for UI (subset latin) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Amiri font for Arabic text (subset) -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-canvas text-ink font-[family-name:var(--font-ui)] min-h-screen flex flex-col">
+    <!-- Sticky top navbar -->
+    <Navbar />
+
+    <div class="flex flex-1">
+      <!-- Desktop sidebar -->
+      <Sidebar />
+
+      <!-- Main content area -->
+      <main class="flex-1 pb-20 lg:pb-8">
+        <slot />
+      </main>
+    </div>
+
+    <!-- Mobile bottom nav -->
+    <BottomNav />
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+  </body>
+</html>

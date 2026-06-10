@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tasbih from '../../components/tasbih/Tasbih.svelte';
+---
+
+<BaseLayout title="Tasbih — Ruang">
+  <div class="max-w-md mx-auto px-4 py-8" transition:name="page-tasbih">
+    <h1 class="text-3xl font-black uppercase tracking-wider mb-6">Tasbih Counter</h1>
+    <Tasbih client:load transition:persist />
+  </div>
+</BaseLayout>

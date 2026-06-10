@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SolatWindow from '../../components/solat/SolatWindow.svelte';
+import SunnahTimesPanel from '../../components/solat/SunnahTimesPanel.svelte';
+import SolatSettingsPanel from '../../components/solat/SolatSettingsPanel.svelte';
+import PrayerTrackerWidget from '../../components/solat/PrayerTrackerWidget.svelte';
+---
+
+<BaseLayout title="Waktu Solat — Ruang">
+  <div class="max-w-6xl mx-auto px-4 py-8" transition:name="page-solat">
+    <h1 class="text-3xl font-black uppercase tracking-wider mb-6">Waktu Solat</h1>
+
+    <!-- Mobile: single column stack -->
+    <div class="lg:grid lg:grid-cols-[1fr_340px] lg:gap-6">
+      <!-- Main panel -->
+      <div class="flex flex-col gap-6">
+        <div class="card-brutal">
+          <SolatWindow client:load />
+        </div>
+
+        <!-- Sunnah panel (below on mobile, side on desktop) -->
+        <div class="card-brutal-sm lg:hidden">
+          <SunnahTimesPanel client:load />
+        </div>
+      </div>
+
+      <!-- Side panel (desktop) -->
+      <aside class="hidden lg:flex lg:flex-col lg:gap-4">
+        <div class="card-brutal-sm">
+          <SunnahTimesPanel client:load />
+        </div>
+        <div class="card-brutal-sm">
+          <PrayerTrackerWidget client:load />
+        </div>
+        <div class="card-brutal-sm">
+          <SolatSettingsPanel client:load />
+        </div>
+      </aside>
+
+      <!-- Mobile-only: tracker + settings below main -->
+      <div class="flex flex-col gap-4 lg:hidden mt-6">
+        <div class="card-brutal-sm">
+          <PrayerTrackerWidget client:load />
+        </div>
+        <div class="card-brutal-sm">
+          <SolatSettingsPanel client:load />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#0D0D0D"/>
+  <rect x="16" y="16" width="480" height="480" fill="#F8F5F2"/>
+  <!-- Mosque silhouette -->
+  <path d="M96 28 C80 48 68 60 68 80 L68 120 L44 120 L44 152 L148 152 L148 120 L124 120 L124 80 C124 60 112 48 96 28Z" fill="#0038FF" stroke="#0D0D0D" stroke-width="4"/>
+  <!-- Crescent -->
+  <circle cx="96" cy="52" r="6" fill="#FFD500" stroke="#0D0D0D" stroke-width="2"/>
+  <!-- Door -->
+  <path d="M84 152 L84 128 C84 120 96 116 96 116 C96 116 108 120 108 128 L108 152Z" fill="#FFD500" stroke="#0D0D0D" stroke-width="2"/>
+  <!-- Minaret lines -->
+  <rect x="56" y="96" width="4" height="56" fill="#0D0D0D"/>
+  <rect x="132" y="96" width="4" height="56" fill="#0D0D0D"/>
+  <!-- Text -->
+  <text x="96" y="176" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-weight="900" font-size="20" fill="#0D0D0D">RUANG</text>
+</svg>

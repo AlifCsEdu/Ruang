@@ -1,0 +1,10 @@
+# PROJECT RUANG - AI AGENT RULES
+You are working on "Project Ruang", a high-performance, Neo-Brutalist Muslim OS web app for Malaysians.
+ALWAYS read `master_blueprint.md` before answering any coding question.
+
+CRITICAL GUARDRAILS:
+1. ZERO-JS DEFAULT: Never use React. Use Astro for layout, Svelte 5 (Runes) for interactive islands.
+2. NO BLOAT: Never `npm install` heavy UI libraries. Extract CSS/Tailwind classes from HyperUI/Neobrutalism manually.
+3. DESIGN SYSTEM: Strict adherence to 4px solid black borders, hard offset shadows (`shadow-[8px_8px_0px_0px_#0D0D0D]`), and vibrant accents (Electric Blue, Cyber Yellow). NO gradients, NO blur, NO soft shadows.
+4. PERFORMANCE: McMaster-Carr standard. Edge cache all API calls. Use Astro ViewTransitions.
+5. LOCALIZATION: Use Malaysian terminology (Waktu Solat, Subuh, Zohor, JAKIM zones). Ensure proper RTL handling for Arabic text.

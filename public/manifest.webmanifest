@@ -1,0 +1,26 @@
+{
+  "name": "Ruang — Your Muslim Companion",
+  "short_name": "Ruang",
+  "description": "An all-in-one Muslim web app for Malaysian users. Prayer times, Al-Quran, Hadith, Duas, and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F5F2",
+  "theme_color": "#0D0D0D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "education"],
+  "lang": "en"
+}

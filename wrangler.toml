@@ -1,0 +1,3 @@
+# Cloudflare Workers compatibility flags
+# Required for Svelte 5 SSR (uses node:async_hooks)
+compatibility_flags = ["nodejs_compat"]

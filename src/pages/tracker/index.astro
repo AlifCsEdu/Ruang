@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PrayerTracker from '../../components/tracker/PrayerTracker.svelte';
+---
+
+<BaseLayout title="Prayer Tracker — Ruang">
+  <div class="max-w-2xl mx-auto px-4 py-8" transition:name="page-tracker">
+    <h1 class="text-3xl font-black uppercase tracking-wider mb-6">Prayer Tracker</h1>
+    <PrayerTracker client:load transition:persist />
+  </div>
+</BaseLayout>

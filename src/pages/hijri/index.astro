@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CalendarGrid from '../../components/hijri/CalendarGrid.svelte';
+---
+
+<BaseLayout title="Calendar — Ruang">
+  <div class="max-w-3xl mx-auto px-4 py-8" transition:name="page-hijri">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-black uppercase tracking-wider">Calendar</h1>
+      <p class="text-sm font-bold text-ink/60 mt-1">Gregorian + Hijri calendar with Malaysian holidays</p>
+    </div>
+
+    <!-- Interactive Calendar -->
+    <CalendarGrid client:load>
+      <div class="text-center py-12 animate-pulse">
+        <p class="font-black text-ink/40 uppercase tracking-wider">Loading calendar...</p>
+      </div>
+    </CalendarGrid>
+  </div>
+</BaseLayout>

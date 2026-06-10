@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DashboardPrayerCard from '../components/solat/DashboardPrayerCard.svelte';
+import { NAV_LINKS } from '../components/layout/NavLinks';
+import { gregorianToHijri, HIJRI_MONTHS, HIJRI_MONTHS_AR } from '../lib/hijri/hijri';
+
+// Today's Hijri date (server-rendered)
+const today = new Date();
+const hijriToday = gregorianToHijri(today.getFullYear(), today.getMonth() + 1, today.getDate());
+const hijriDateStr = `${hijriToday.day} ${HIJRI_MONTHS[hijriToday.month - 1]} ${hijriToday.year} AH`;
+const hijriDateAr = `${hijriToday.day} ${HIJRI_MONTHS_AR[hijriToday.month - 1]} ${hijriToday.year}`;
+
+// Feature cards (skip Dashboard itself)
+const features = NAV_LINKS.filter((l) => l.href !== '/').map((link) => ({
+  ...link,
+  descriptions: {
+    '/solat': 'JAKIM prayer times with live countdown',
+    '/quran': 'Read the Noble Quran with translations',
+    '/duas': 'Daily supplications from Hisnul Muslim',
+    '/hadith': 'Prophetic traditions & teachings',
+    '/tasbih': 'Digital counter with haptic feedback',
+    '/tracker': 'Track your daily prayer streaks',
+    '/hijri': 'Islamic calendar with key dates',
+  } as Record<string, string>,
+}));
+---
+
+<BaseLayout title="Ruang — Your Muslim Companion">
+  <div class="max-w-4xl mx-auto px-4 py-8" transition:name="page-home">
+    <!-- Hero -->
+    <div class="mb-8">
+      <h1 class="text-4xl md:text-5xl font-black uppercase tracking-wider">
+        Assalamualaikum
+      </h1>
+      <p class="text-lg font-bold text-ink/60 mt-2" dir="rtl" lang="ar">{hijriDateAr}</p>
+      <p class="text-sm font-bold text-ink/40 mt-0.5">{hijriDateStr}</p>
+    </div>
+
+    <!-- Next Prayer Card (Svelte island) -->
+    <section class="mb-8">
+      <div class="card-brutal" transition:name="page-solat">
+        <DashboardPrayerCard client:load />
+      </div>
+    </section>
+
+    <!-- Feature Cards Grid -->
+    <section>
+      <h2 class="text-xl font-black uppercase tracking-wider mb-4">Features</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {features.map((f) => (
+          <a
+            href={f.href}
+            class:list={[
+              'card-brutal-sm group flex flex-col gap-3 transition-all duration-75',
+              'hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0px_0px_#0D0D0D]',
+              'focus:outline-none focus:ring-4 focus:ring-accent-blue',
+              f.color,
+            ]}
+            transition:name={`page-${f.href.replace('/', '')}`}
+          >
+            <div class="flex items-center gap-3">
+              <span class="text-ink shrink-0" set:html={f.icon(24)} />
+              <span class="font-black text-base uppercase tracking-wider">{f.label}</span>
+            </div>
+            <p class="text-sm font-bold text-ink/60">{f.descriptions[f.href]}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>

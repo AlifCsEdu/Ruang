@@ -1,0 +1,28 @@
+---
+import { NAV_LINKS, isActive } from './NavLinks';
+
+const currentPath = Astro.url.pathname;
+---
+
+<aside class="hidden lg:flex flex-col sticky top-14 w-56 h-[calc(100vh-3.5rem)] border-r-4 border-ink bg-canvas overflow-y-auto shrink-0">
+  <div class="flex flex-col gap-1 p-3">
+    {NAV_LINKS.map((link) => {
+      const active = isActive(currentPath, link.href);
+      return (
+        <a
+          href={link.href}
+          class:list={[
+            'flex items-center gap-3 px-3 py-2.5 font-bold text-sm border-2 transition-all duration-75',
+            'focus:outline-none focus:ring-3 focus:ring-accent-blue',
+            active
+              ? 'border-ink bg-accent-yellow shadow-[4px_4px_0px_0px_#0D0D0D]'
+              : 'border-transparent hover:border-ink/30 hover:bg-white',
+          ]}
+        >
+          <span class="shrink-0 text-ink" set:html={link.icon(18)} />
+          <span class="uppercase tracking-wider truncate">{link.label}</span>
+        </a>
+      );
+    })}
+  </div>
+</aside>

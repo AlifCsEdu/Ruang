@@ -1,0 +1,26 @@
+---
+import { BOTTOM_NAV_LINKS, isActive } from './NavLinks';
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around h-16 border-t-4 border-ink bg-white">
+  {BOTTOM_NAV_LINKS.map((link) => {
+    const active = isActive(currentPath, link.href);
+    return (
+      <a
+        href={link.href}
+        class:list={[
+          'flex flex-col items-center justify-center gap-0.5 w-full h-full transition-all duration-75',
+          'focus:outline-none focus:ring-3 focus:ring-accent-blue focus:ring-inset',
+          active ? 'text-accent-blue' : 'text-ink/60 hover:text-ink',
+        ]}
+        aria-label={link.label}
+        aria-current={active ? 'page' : undefined}
+      >
+        <span set:html={link.icon(20)} />
+        <span class="text-[10px] font-bold uppercase tracking-wider">{link.label}</span>
+      </a>
+    );
+  })}
+</nav>
