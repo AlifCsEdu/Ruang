@@ -1,9 +1,5 @@
 ---
-import { NAV_LINKS, isActive } from './NavLinks';
-
-const currentPath = Astro.url.pathname;
-// Links for desktop navbar (skip Dashboard since brand links to /)
-const desktopLinks = NAV_LINKS.filter((l) => l.href !== '/');
+// Slim brand-only navbar — navigation handled by sidebar (md+) and bottom nav (<md)
 ---
 
 <nav class="sticky top-0 z-50 flex items-center h-14 px-4 border-b-4 border-ink bg-canvas">
@@ -14,25 +10,4 @@ const desktopLinks = NAV_LINKS.filter((l) => l.href !== '/');
   >
     RUANG
   </a>
-
-  <!-- Desktop nav links -->
-  <div class="hidden md:flex items-center gap-1 ml-6">
-    {desktopLinks.map((link) => {
-      const active = isActive(currentPath, link.href);
-      return (
-        <a
-          href={link.href}
-          class:list={[
-            'px-3 py-1.5 text-xs font-bold uppercase tracking-wider border-2 transition-all duration-75',
-            'focus:outline-none focus:ring-3 focus:ring-accent-blue',
-            active
-              ? 'border-ink bg-accent-yellow shadow-[3px_3px_0px_0px_#0D0D0D]'
-              : 'border-transparent hover:border-ink hover:bg-white',
-          ]}
-        >
-          {link.label}
-        </a>
-      );
-    })}
-  </div>
 </nav>

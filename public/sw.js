@@ -1,5 +1,5 @@
-// Ruang Service Worker — Cache-first for app shell, network-first for APIs
-const CACHE_NAME = 'ruang-v1';
+// Ruang Service Worker — NetworkFirst for assets, defensive caching for pages/APIs
+const CACHE_NAME = 'ruang-v2';
 const OFFLINE_URL = '/';
 
 const PRECACHE_URLS = [
@@ -26,7 +26,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: StaleWhileRevalidate for pages, NetworkFirst for APIs
+// Fetch handlers
 self.addEventListener('fetch', (event) => {
   const { request } = event;
 
@@ -35,13 +35,15 @@ self.addEventListener('fetch', (event) => {
 
   const url = new URL(request.url);
 
-  // API requests: NetworkFirst with cache fallback
+  // API requests: NetworkFirst, only cache successful responses
   if (url.pathname.startsWith('/api/')) {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
           return response;
         })
         .catch(() => caches.match(request))
@@ -49,33 +51,32 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: CacheFirst
+  // Static assets: NetworkFirst with cache fallback (prevents stale bundles after deploy)
   if (url.pathname.match(/\.(js|css|svg|woff2|png|jpg|webp)$/)) {
     event.respondWith(
-      caches.match(request).then((cached) => {
-        if (cached) return cached;
-        return fetch(request).then((response) => {
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+          }
           return response;
-        });
-      })
+        })
+        .catch(() => caches.match(request).then((cached) => cached || new Response('Offline', { status: 503 })))
     );
     return;
   }
 
-  // Pages: StaleWhileRevalidate
+  // Pages: NetworkFirst with cache fallback, only cache successful responses
   event.respondWith(
-    caches.match(request).then((cached) => {
-      const fetchPromise = fetch(request)
-        .then((response) => {
+    fetch(request)
+      .then((response) => {
+        if (response.ok) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          return response;
-        })
-        .catch(() => cached);
-
-      return cached || fetchPromise;
-    })
+        }
+        return response;
+      })
+      .catch(() => caches.match(request).then((cached) => cached || new Response('Offline', { status: 503 })))
   );
 });

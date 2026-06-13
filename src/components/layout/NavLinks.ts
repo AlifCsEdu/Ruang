@@ -8,6 +8,7 @@ import {
   BeadsIcon,
   CheckCircleIcon,
   CalendarIcon,
+  GearIcon,
 } from '../icons/index';
 
 export interface NavLink {
@@ -26,6 +27,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: '/tasbih', label: 'Tasbih', icon: BeadsIcon, color: 'bg-accent-blue/10' },
   { href: '/tracker', label: 'Tracker', icon: CheckCircleIcon, color: 'bg-accent-green/10' },
   { href: '/hijri', label: 'Calendar', icon: CalendarIcon, color: 'bg-accent-yellow/20' },
+  { href: '/settings', label: 'Settings', icon: GearIcon, color: 'bg-ink/5' },
 ];
 
 // Bottom nav shows a subset (most-used + home)

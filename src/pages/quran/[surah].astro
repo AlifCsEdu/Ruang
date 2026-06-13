@@ -17,38 +17,57 @@ if (!surah) {
 ---
 
 <BaseLayout title={`${surah.englishName} — Al-Quran`}>
-  <div class="max-w-3xl mx-auto px-4 py-8 pb-32">
+  <div class="max-w-4xl mx-auto px-4 py-8 pb-32">
     <!-- Navigation -->
-    <div class="flex items-center justify-between mb-6">
-      <a href="/quran" class="btn-brutal-sm text-sm">← All Surahs</a>
+    <div class="flex items-center justify-between mb-4">
+      <a href="/quran" class="btn-brutal-sm text-sm">← Semua Surah</a>
       <div class="flex items-center gap-2">
         {num > 1 && (
-          <a href={`/quran/${num - 1}`} class="btn-brutal-sm text-sm" transition:persist>← Prev</a>
+          <a href={`/quran/${num - 1}`} class="btn-brutal-sm text-sm" title="Surah sebelumnya">← {SURAHS[num - 2]?.englishName ?? 'Prev'}</a>
         )}
         {num < 114 && (
-          <a href={`/quran/${num + 1}`} class="btn-brutal-sm text-sm" transition:persist>Next →</a>
+          <a href={`/quran/${num + 1}`} class="btn-brutal-sm text-sm" title="Surah seterusnya">{SURAHS[num]?.englishName ?? 'Next'} →</a>
         )}
       </div>
     </div>
 
-    <!-- Surah Header -->
-    <div class="card-brutal mb-6 text-center" transition:name={`surah-${num}`}>
-      <div class="flex items-center justify-center gap-4 mb-2">
-        <span class="w-12 h-12 bg-ink text-white flex items-center justify-center font-black text-lg">{num}</span>
-        <div>
-          <h1 class="text-2xl font-black uppercase tracking-wider">{surah.englishName}</h1>
-          <p class="text-sm text-ink/60 font-bold">{surah.englishMeaning} • {surah.versesCount} ayat • {surah.revelationType === 'Meccan' ? 'Makkah' : 'Madinah'}</p>
-        </div>
+    <!-- Surah Hero Header -->
+    <div class="card-hero mb-6 text-center relative overflow-hidden">
+      <!-- Revelation type badge -->
+      <div class="absolute top-4 right-4">
+        <span class="chip-brutal {surah.revelationType === 'Meccan' ? 'bg-accent-yellow' : 'bg-accent-blue text-white'}">
+          {surah.revelationType === 'Meccan' ? '🕋 Makkah' : '🕌 Madinah'}
+        </span>
       </div>
+
+      <div class="flex flex-col items-center gap-3">
+        <!-- Surah number -->
+        <div class="w-16 h-16 bg-ink text-white flex items-center justify-center font-black text-2xl shadow-[4px_4px_0px_0px_#FFD500]">
+          {num}
+        </div>
+
+        <div>
+          <h1 class="text-3xl font-black uppercase tracking-wider">{surah.englishName}</h1>
+          <p class="text-sm text-ink/60 font-bold mt-1">{surah.englishMeaning} · {surah.versesCount} ayat</p>
+        </div>
+
+        <!-- Arabic name -->
+        <p class="arabic-text text-3xl" dir="rtl" style="line-height: 1.8;">{surah.name}</p>
+      </div>
+
+      <!-- Bismillah -->
       {num !== 1 && num !== 9 && (
-        <p class="arabic-text text-xl mt-4" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>
+        <div class="mt-6 pt-4 border-t-4 border-ink/10">
+          <p class="arabic-text text-xl" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>
+          <p class="text-xs text-ink/40 font-bold mt-1">Dengan nama Allah, Yang Maha Pemurah, lagi Maha Mengasihani</p>
+        </div>
       )}
     </div>
 
     <!-- Surah Reader (Svelte 5 island) -->
     <SurahReader chapter={num} client:load>
       <div class="text-center py-16 animate-pulse">
-        <p class="font-black text-ink/40 uppercase tracking-wider">Loading verses...</p>
+        <p class="font-black text-ink/40 uppercase tracking-wider">Memuatkan ayat-ayat...</p>
       </div>
     </SurahReader>
   </div>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SettingsPage from '../../components/settings/SettingsPage.svelte';
+---
+
+<BaseLayout title="Tetapan — Ruang">
+  <div class="max-w-3xl mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-6">
+      <h1 class="text-3xl font-black uppercase tracking-wider">Tetapan</h1>
+      <p class="text-sm font-bold text-ink/60 mt-1">Kawal semua pilihan aplikasi anda di satu tempat.</p>
+    </div>
+
+    <!-- Accent bar -->
+    <div class="accent-bar mb-6"></div>
+
+    <!-- Settings component (Svelte 5 island) -->
+    <SettingsPage client:load>
+      <div class="text-center py-12 animate-pulse">
+        <p class="font-black text-ink/40 uppercase tracking-wider">Loading settings...</p>
+      </div>
+    </SettingsPage>
+  </div>
+</BaseLayout>

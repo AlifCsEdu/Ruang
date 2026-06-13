@@ -61,7 +61,7 @@
   },
   {
     "id": "dua-7",
-    "title": "Dua for Guidance",
+    "title": "Dua for Guidance (Istikhara)",
     "titleAr": "دعاء الاستخارة",
     "category": "Guidance",
     "arabic": "اللَّهُمَّ إِنِّي أَسْتَخِيرُكَ بِعِلْمِكَ، وَأَسْتَقْدِرُكَ بِقُدْرَتِكَ، وَأَسْأَلُكَ مِنْ فَضْلِكَ الْعَظِيمِ",
@@ -148,5 +148,405 @@
     "transliteration": "Allahumma innee as'aluka 'ilman nafi'an, wa rizqan tayyiban, wa 'amalan mutaqabbalan",
     "translation": "O Allah, I ask You for beneficial knowledge, good provision, and acceptable deeds.",
     "reference": "Ibn Majah 925"
+  },
+  {
+    "id": "dua-16",
+    "title": "Morning Remembrance",
+    "titleAr": "ذكر الصباح",
+    "category": "Morning & Evening",
+    "arabic": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ",
+    "transliteration": "Asbahna wa asbahal-mulku lillah, walhamdu lillah, la ilaha illallahu wahdahu la shareeka lah",
+    "translation": "We have reached the morning and at this very time the whole kingdom belongs to Allah. All praise is for Allah. None has the right to be worshipped except Allah, alone, without any partner.",
+    "reference": "Muslim 2723"
+  },
+  {
+    "id": "dua-17",
+    "title": "Evening Remembrance",
+    "titleAr": "ذكر المساء",
+    "category": "Morning & Evening",
+    "arabic": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ",
+    "transliteration": "Amsayna wa amsal-mulku lillah, walhamdu lillah, la ilaha illallahu wahdahu la shareeka lah",
+    "translation": "We have reached the evening and at this very time the whole kingdom belongs to Allah. All praise is for Allah. None has the right to be worshipped except Allah, alone, without any partner.",
+    "reference": "Muslim 2723"
+  },
+  {
+    "id": "dua-18",
+    "title": "Entering the Mosque",
+    "titleAr": "دعاء دخول المسجد",
+    "category": "Mosque",
+    "arabic": "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ",
+    "transliteration": "Allahum-maftah lee abwaba rahmatika",
+    "translation": "O Allah, open the gates of Your mercy for me.",
+    "reference": "Muslim 713"
+  },
+  {
+    "id": "dua-19",
+    "title": "Leaving the Mosque",
+    "titleAr": "دعاء الخروج من المسجد",
+    "category": "Mosque",
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ",
+    "transliteration": "Allahumma innee as'aluka min fadlika",
+    "translation": "O Allah, I ask You from Your favour.",
+    "reference": "Muslim 713"
+  },
+  {
+    "id": "dua-20",
+    "title": "After Adhan",
+    "titleAr": "دعاء بعد الأذان",
+    "category": "Prayer",
+    "arabic": "اللَّهُمَّ رَبَّ هَذِهِ الدَّعْوَةِ التَّامَّةِ، وَالصَّلاَةِ الْقَائِمَةِ، آتِ مُحَمَّدًا الْوَسِيلَةَ وَالْفَضِيلَةَ، وَابْعَثْهُ مَقَامًا مَحْمُودًا الَّذِي وَعَدْتَهُ",
+    "transliteration": "Allaahumma Rabba haathid-da'watit-taammah, wassalaatil-qaa'imah, aati Muhammadanil-waseelata walfadeelah, wab'athhu maqaamam mahmoodanil-lathee wa'adtah",
+    "translation": "O Allah, Lord of this perfect call and established prayer, grant Muhammad the intercession and favour, and raise him to the praised station that You have promised him.",
+    "reference": "Bukhari 614"
+  },
+  {
+    "id": "dua-21",
+    "title": "Between Adhan and Iqamah",
+    "titleAr": "دعاء بين الأذان والإقامة",
+    "category": "Prayer",
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ",
+    "transliteration": "Allahumma innee as'alukal-'aafiyata fid-dunya wal-aakhirah",
+    "translation": "O Allah, I ask You for wellbeing in this world and the Hereafter.",
+    "reference": "Abu Dawud 5052"
+  },
+  {
+    "id": "dua-22",
+    "title": "Before Wudu (Ablution)",
+    "titleAr": "دعاء قبل الوضوء",
+    "category": "Worship",
+    "arabic": "بِسْمِ اللَّهِ",
+    "transliteration": "Bismillah",
+    "translation": "In the name of Allah.",
+    "reference": "Abu Dawud 101"
+  },
+  {
+    "id": "dua-23",
+    "title": "After Wudu (Ablution)",
+    "titleAr": "دعاء بعد الوضوء",
+    "category": "Worship",
+    "arabic": "أَشْهَدُ أَنْ لاَ إِلَهَ إِلاَّ اللَّهُ وَحْدَهُ لاَ شَرِيكَ لَهُ وَأَشْهَدُ أَنَّ مُحَمَّدًا عَبْدُهُ وَرَسُولُهُ",
+    "transliteration": "Ash-hadu an la ilaha illallahu wahdahu la shareeka lah, wa ash-hadu anna Muhammadan 'abduhu wa rasooluhu",
+    "translation": "I bear witness that none has the right to be worshipped except Allah, alone without partner, and I bear witness that Muhammad is His slave and messenger.",
+    "reference": "Muslim 234"
+  },
+  {
+    "id": "dua-24",
+    "title": "Before Entering Toilet",
+    "titleAr": "دعاء دخول الخلاء",
+    "category": "Daily",
+    "arabic": "بِسْمِ اللَّهِ، اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْخُبْثِ وَالْخَبَائِثِ",
+    "transliteration": "Bismillah, Allahumma innee a'oothu bika minal-khubthi wal-khaba'ith",
+    "translation": "In the name of Allah. O Allah, I seek refuge in You from the male and female evil jinn.",
+    "reference": "Bukhari 142"
+  },
+  {
+    "id": "dua-25",
+    "title": "After Leaving Toilet",
+    "titleAr": "دعاء الخروج من الخلاء",
+    "category": "Daily",
+    "arabic": "غُفْرَانَكَ",
+    "transliteration": "Ghufraanak",
+    "translation": "I seek Your forgiveness.",
+    "reference": "Tirmidhi 7"
+  },
+  {
+    "id": "dua-26",
+    "title": "When It Rains",
+    "titleAr": "دعاء نزول المطر",
+    "category": "Nature",
+    "arabic": "اللَّهُمَّ صَيِّبًا نَافِعًا",
+    "transliteration": "Allahumma sayyiban naafi'aa",
+    "translation": "O Allah, (let it be) a beneficial rain.",
+    "reference": "Bukhari 1032"
+  },
+  {
+    "id": "dua-27",
+    "title": "After Rain",
+    "titleAr": "دعاء بعد المطر",
+    "category": "Nature",
+    "arabic": "مُطِرْنَا بِفَضْلِ اللَّهِ وَرَحْمَتِهِ",
+    "transliteration": "Mutirna bifadlillahi wa rahmatihi",
+    "translation": "We have been given rain by the grace and mercy of Allah.",
+    "reference": "Bukhari 846"
+  },
+  {
+    "id": "dua-28",
+    "title": "When Seeing the New Moon",
+    "titleAr": "دعاء رؤية الهلال",
+    "category": "Nature",
+    "arabic": "اللَّهُمَّ أَهِلَّهُ عَلَيْنَا بِالْيُمْنِ وَالإِيمَانِ، وَالسَّلاَمَةِ وَالإِسْلاَمِ، رَبِّي وَرَبُّكَ اللَّهُ",
+    "transliteration": "Allahumma ahillahu 'alayna bil-yumni wal-eeman, was-salaamati wal-islam, rabbee wa rabbukal-lahu",
+    "translation": "O Allah, let this moon appear on us with prosperity and faith, with safety and Islam. My Lord and your Lord is Allah.",
+    "reference": "Tirmidhi 3454"
+  },
+  {
+    "id": "dua-29",
+    "title": "When Looking in the Mirror",
+    "titleAr": "دعاء النظر في المرآة",
+    "category": "Daily",
+    "arabic": "اللَّهُمَّ أَنْتَ حَسَّنْتَ خَلْقِي فَحَسِّنْ خُلُقِي",
+    "transliteration": "Allahumma anta hassanta khalqee fahassin khuluqee",
+    "translation": "O Allah, just as You have made my outward appearance beautiful, make my character beautiful too.",
+    "reference": "Ahmad 3823"
+  },
+  {
+    "id": "dua-30",
+    "title": "When Wearing New Clothes",
+    "titleAr": "دعاء لبس الثوب الجديد",
+    "category": "Daily",
+    "arabic": "اللَّهُمَّ لَكَ الْحَمْدُ أَنْتَ كَسَوْتَنِيهِ، أَسْأَلُكَ مِنْ خَيْرِهِ وَخَيْرِ مَا صُنِعَ لَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّهِ وَشَرِّ مَا صُنِعَ لَهُ",
+    "transliteration": "Allahumma lakal-hamdu anta kasawtaneehi, as'aluka min khayrihi wa khayri ma suni'a lah, wa a'oothu bika min sharrihi wa sharri ma suni'a lah",
+    "translation": "O Allah, all praise is for You. You have clothed me with it. I ask You for its good and the good of what it was made for, and I seek refuge in You from its evil and the evil of what it was made for.",
+    "reference": "Tirmidhi 1767"
+  },
+  {
+    "id": "dua-31",
+    "title": "Dua for Good Health",
+    "titleAr": "دعاء العافية",
+    "category": "Health",
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ",
+    "transliteration": "Allahumma innee as'alukal-'afwa wal-'aafiyata fid-dunya wal-aakhirah",
+    "translation": "O Allah, I ask You for pardon and wellbeing in this world and the Hereafter.",
+    "reference": "Ibn Majah 3871"
+  },
+  {
+    "id": "dua-32",
+    "title": "When Visiting the Sick",
+    "titleAr": "دعاء زيارة المريض",
+    "category": "Health",
+    "arabic": "لاَ بَأْسَ طَهُورٌ إِنْ شَاءَ اللَّهُ",
+    "transliteration": "La ba'sa, taahoorun in shaa'Allah",
+    "translation": "No worry, it is a purification, if Allah wills.",
+    "reference": "Bukhari 3616"
+  },
+  {
+    "id": "dua-33",
+    "title": "When Feeling Pain",
+    "titleAr": "دعاء الألم",
+    "category": "Health",
+    "arabic": "بِسْمِ اللَّهِ، أَعُوذُ بِاللَّهِ وَقُدْرَتِهِ مِنْ شَرِّ مَا أَجِدُ وَأُحَاذِرُ",
+    "transliteration": "Bismillah, a'oothu billahi wa qudratihi min sharri ma ajidu wa uhaathir",
+    "translation": "In the name of Allah. I seek refuge in Allah and His power from the evil of what I feel and worry about.",
+    "reference": "Muslim 2202"
+  },
+  {
+    "id": "dua-34",
+    "title": "Dua for Ease in Difficulty",
+    "titleAr": "دعاء التيسير",
+    "category": "Hardship",
+    "arabic": "اللَّهُمَّ لاَ سَهْلَ إِلاَّ مَا جَعَلْتَهُ سَهْلًا، وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلًا",
+    "transliteration": "Allahumma la sahla illa ma ja'altahu sahla, wa anta taj'alul-hazna itha shi'ta sahla",
+    "translation": "O Allah, there is no ease other than what You make easy. If You please, You ease sorrow/difficulty.",
+    "reference": "Ibn Hibban 2427"
+  },
+  {
+    "id": "dua-35",
+    "title": "Dua for a Good Hereafter",
+    "titleAr": "دعاء حسنة في الآخرة",
+    "category": "Worship",
+    "arabic": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+    "transliteration": "Rabbana aatina fid-dunya hasanatan wa fil-aakhirati hasanatan wa qina 'athaaban-naar",
+    "translation": "Our Lord, give us in this world that which is good and in the Hereafter that which is good, and protect us from the torment of the Fire.",
+    "reference": "Quran 2:201"
+  },
+  {
+    "id": "dua-36",
+    "title": "Dua for Beneficial Knowledge",
+    "titleAr": "دعاء العلم النافع",
+    "category": "Knowledge",
+    "arabic": "اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي، وَعَلِّمْنِي مَا يَنْفَعُنِي، وَزِدْنِي عِلْمًا",
+    "transliteration": "Allahum-man-fa'nee bima 'allamtanee, wa 'allimnee ma yanfa'umee, wa zidnee 'ilma",
+    "translation": "O Allah, benefit me with what You have taught me, teach me what will benefit me, and increase me in knowledge.",
+    "reference": "Tirmidhi 3599"
+  },
+  {
+    "id": "dua-37",
+    "title": "Dua Before Studying",
+    "titleAr": "دعاء قبل الدراسة",
+    "category": "Knowledge",
+    "arabic": "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي يَفْقَهُوا قَوْلِي",
+    "transliteration": "Rabbish-rah lee sadree, wa yassir lee amree, wahlul 'uqdatan min lisanee, yafqahoo qawlee",
+    "translation": "My Lord, expand for me my chest, ease for me my task, and untie the knot from my tongue that they may understand my speech.",
+    "reference": "Quran 20:25-28"
+  },
+  {
+    "id": "dua-38",
+    "title": "Dua When Fasting (Before Breaking Fast)",
+    "titleAr": "دعاء الإفطار",
+    "category": "Worship",
+    "arabic": "ذَهَبَ الظَّمَأُ وَابْتَلَّتِ الْعُرُوقُ وَثَبَتَ الأَجْرُ إِنْ شَاءَ اللَّهُ",
+    "transliteration": "Dhahaba ath-thama'u wabtallatil-'urooqu wa thabatal-ajru in shaa'Allah",
+    "translation": "The thirst is gone, the veins are moistened, and the reward is confirmed, if Allah wills.",
+    "reference": "Abu Dawud 2357"
+  },
+  {
+    "id": "dua-39",
+    "title": "Dua for Steadfastness",
+    "titleAr": "دعاء الثبات",
+    "category": "Worship",
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الثَّبَاتَ فِي الأَمْرِ، وَالْعَزِيمَةَ عَلَى الرُّشْدِ",
+    "transliteration": "Allahumma innee as'alukath-thabaata fil-amr, wal-'azeemata 'alar-rushd",
+    "translation": "O Allah, I ask You for steadfastness in all matters and for determination upon the path of guidance.",
+    "reference": "Nasa'i 3160"
+  },
+  {
+    "id": "dua-40",
+    "title": "Dua for Gratitude",
+    "titleAr": "دعاء الشكر",
+    "category": "Worship",
+    "arabic": "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+    "transliteration": "Allahumma a'innee 'ala thikrika wa shukrika wa husni 'ibaadatik",
+    "translation": "O Allah, help me to remember You, to be grateful to You, and to worship You in an excellent manner.",
+    "reference": "Abu Dawud 1522"
+  },
+  {
+    "id": "dua-41",
+    "title": "Dua for Righteous Companions",
+    "titleAr": "دعاء الصحبة الصالحة",
+    "category": "Family",
+    "arabic": "رَبَّنَا هَبْ لَنَا مِنْ أَزْوَاجِنَا وَذُرِّيَّاتِنَا قُرَّةَ أَعْيُنٍ وَاجْعَلْنَا لِلْمُتَّقِينَ إِمَامًا",
+    "transliteration": "Rabbana hab lana min azwajina wa thurriyyatina qurrata a'yunin waj'alna lil-muttaqeena imama",
+    "translation": "Our Lord, grant us from among our spouses and offspring comfort to our eyes and make us a leader for the righteous.",
+    "reference": "Quran 25:74"
+  },
+  {
+    "id": "dua-42",
+    "title": "Dua for Offspring",
+    "titleAr": "دعاء الذرية",
+    "category": "Family",
+    "arabic": "رَبِّ هَبْ لِي مِنَ الصَّالِحِينَ",
+    "transliteration": "Rabbi hab lee minas-saliheen",
+    "translation": "My Lord, grant me from among the righteous.",
+    "reference": "Quran 37:100"
+  },
+  {
+    "id": "dua-43",
+    "title": "Dua for Repentance",
+    "titleAr": "دعاء التوبة",
+    "category": "Forgiveness",
+    "arabic": "اللَّهُمَّ أَنْتَ رَبِّي لاَ إِلَهَ إِلاَّ أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لاَ يَغْفِرُ الذُّنُوبَ إِلاَّ أَنْتَ",
+    "transliteration": "Allahumma anta rabbee la ilaha illa anta, khalaqtanee wa ana 'abduka, wa ana 'ala 'ahdika wa wa'dika mastata'tu, a'oothu bika min sharri ma sana'tu, aboo'u laka bini'matika 'alayya, wa aboo'u bithanbee faghfir lee fa innahu la yaghfiruth-thunooba illa anta",
+    "translation": "O Allah, You are my Lord, none has the right to be worshipped except You. You created me and I am Your servant. I abide by Your covenant and promise as best I can. I seek refuge in You from the evil of what I have done. I acknowledge Your favour upon me and I acknowledge my sin, so forgive me, for verily none can forgive sins except You.",
+    "reference": "Bukhari 6306"
+  },
+  {
+    "id": "dua-44",
+    "title": "Seeking Refuge from Hellfire",
+    "titleAr": "الاستعاذة من النار",
+    "category": "Forgiveness",
+    "arabic": "رَبَّنَا اصْرِفْ عَنَّا عَذَابَ جَهَنَّمَ إِنَّ عَذَابَهَا كَانَ غَرَامًا",
+    "transliteration": "Rabbanas-rif 'anna 'athaaba jahannama inna 'athaabaha kaana gharaama",
+    "translation": "Our Lord, avert from us the punishment of Hell. Indeed, its punishment is ever-adhering.",
+    "reference": "Quran 25:65"
+  },
+  {
+    "id": "dua-45",
+    "title": "Dua for Relief from Debt",
+    "titleAr": "دعاء قضاء الدين",
+    "category": "Hardship",
+    "arabic": "اللَّهُمَّ اكْفِنِي بِحَلاَلِكَ عَنْ حَرَامِكَ، وَأَغْنِنِي بِفَضْلِكَ عَمَّنْ سِوَاكَ",
+    "transliteration": "Allahum-makfinee bihalaalika 'an haraamika wa aghninee bifadlika 'amman siwaaka",
+    "translation": "O Allah, suffice me with what You have allowed instead of what You have forbidden, and make me independent of all others besides You by Your grace.",
+    "reference": "Tirmidhi 3563"
+  },
+  {
+    "id": "dua-46",
+    "title": "Dua Against Laziness",
+    "titleAr": "دعاء ضد الكسل",
+    "category": "Protection",
+    "arabic": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَالْجُبْنِ وَالْبُخْلِ، وَالْهَمِّ وَالْحَزَنِ، وَعَذَابِ الْقَبْرِ",
+    "transliteration": "Allahumma innee a'oothu bika minal-'ajzi wal-kasal, wal-jubni wal-bukhl, wal-hammi wal-hazan, wa 'athaabil-qabr",
+    "translation": "O Allah, I seek refuge in You from weakness and laziness, cowardice and miserliness, grief and sorrow, and the punishment of the grave.",
+    "reference": "Bukhari 6367"
+  },
+  {
+    "id": "dua-47",
+    "title": "Dua for Good Character",
+    "titleAr": "دعاء حسن الخلق",
+    "category": "Worship",
+    "arabic": "اللَّهُمَّ اهْدِنِي لأَحْسَنِ الأَخْلاَقِ لاَ يَهْدِي لأَحْسَنِهَا إِلاَّ أَنْتَ، وَاصْرِفْ عَنِّي سَيِّئَهَا لاَ يَصْرِفُ عَنِّي سَيِّئَهَا إِلاَّ أَنْتَ",
+    "transliteration": "Allahum-mahdinee li-ahsanil-akhlaaqi la yahdee li-ahsaniha illa anta, was-rif 'annee sayyi'aha la yas-rifu 'annee sayyi'aha illa anta",
+    "translation": "O Allah, guide me to the best of characters, for none can guide to the best of them except You. And turn away from me the worst of characters, for none can turn them away from me except You.",
+    "reference": "Muslim 771"
+  },
+  {
+    "id": "dua-48",
+    "title": "Dua for Jannah",
+    "titleAr": "دعاء الجنة",
+    "category": "Worship",
+    "arabic": "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ",
+    "transliteration": "Allahumma innee as'alukal-jannata wa a'oothu bika minan-naar",
+    "translation": "O Allah, I ask You for Paradise and I seek refuge in You from the Fire.",
+    "reference": "Abu Dawud 792"
+  },
+  {
+    "id": "dua-49",
+    "title": "Dua After Sinning",
+    "titleAr": "دعاء بعد الذنب",
+    "category": "Forgiveness",
+    "arabic": "رَبِّ اغْفِرْ لِي وَتُبْ عَلَيَّ إِنَّكَ أَنْتَ التَّوَّابُ الْغَفُورُ",
+    "transliteration": "Rabbighfir lee wa tub 'alayya innaka antat-tawwaabul-ghafoor",
+    "translation": "My Lord, forgive me and accept my repentance. Indeed, You are the Acceptor of Repentance, the Forgiving.",
+    "reference": "Abu Dawud 1516"
+  },
+  {
+    "id": "dua-50",
+    "title": "Dua for a Blessed Family",
+    "titleAr": "دعاء الأسرة المباركة",
+    "category": "Family",
+    "arabic": "رَبِّ أَوْزِعْنِي أَنْ أَشْكُرَ نِعْمَتَكَ الَّتِي أَنْعَمْتَ عَلَيَّ وَعَلَى وَالِدَيَّ وَأَنْ أَعْمَلَ صَالِحًا تَرْضَاهُ وَأَدْخِلْنِي بِرَحْمَتِكَ فِي عِبَادِكَ الصَّالِحِينَ",
+    "transliteration": "Rabbi awzi'nee an ashkura ni'matakal-latee an'amta 'alayya wa 'ala walidayya wa an a'mala salihan tardah, wa adkhilnee birahmatika fee 'ibaadikas-saliheen",
+    "translation": "My Lord, enable me to be grateful for Your favour which You have bestowed upon me and upon my parents, and to do righteous deeds which You approve, and admit me by Your mercy among Your righteous servants.",
+    "reference": "Quran 27:19"
+  },
+  {
+    "id": "dua-51",
+    "title": "Dua When Travelling",
+    "titleAr": "دعاء السفر",
+    "category": "Travel",
+    "arabic": "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ",
+    "transliteration": "Subhanal-lathee sakhkhara lana hatha wa ma kunna lahu muqrineen, wa inna ila rabbina lamunqaliboon",
+    "translation": "Glory to Him who has subjected this to us, for we could never have done it by ourselves. And surely to our Lord we will return.",
+    "reference": "Quran 43:13-14"
+  },
+  {
+    "id": "dua-52",
+    "title": "Dua When Returning from Travel",
+    "titleAr": "دعاء الرجوع من السفر",
+    "category": "Travel",
+    "arabic": "آيِبُونَ تَائِبُونَ عَابِدُونَ لِرَبِّنَا حَامِدُونَ",
+    "transliteration": "Ayiboona, ta'iboona, 'abidoona, lirabbina hamidoon",
+    "translation": "We return, repenting, worshipping, and praising our Lord.",
+    "reference": "Muslim 1345"
+  },
+  {
+    "id": "dua-53",
+    "title": "Dua for Protection from Trials",
+    "titleAr": "دعاء الاستعاذة من الفتن",
+    "category": "Protection",
+    "arabic": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، وَأَعُوذُ بِكَ مِنْ فِتْنَةِ الْمَسِيحِ الدَّجَّالِ، وَأَعُوذُ بِكَ مِنْ فِتْنَةِ الْمَحْيَا وَالْمَمَاتِ",
+    "transliteration": "Allahumma innee a'oothu bika min 'athaabil-qabr, wa a'oothu bika min fitnatil-maseehid-dajjal, wa a'oothu bika min fitnatil-mahya wal-mamat",
+    "translation": "O Allah, I seek refuge in You from the punishment of the grave, from the trials of the False Messiah, and from the trials of life and death.",
+    "reference": "Bukhari 832"
+  },
+  {
+    "id": "dua-54",
+    "title": "Dua When Angry",
+    "titleAr": "دعاء الغضب",
+    "category": "Daily",
+    "arabic": "أَعُوذُ بِاللَّهِ مِنَ الشَّيْطَانِ الرَّجِيمِ",
+    "transliteration": "A'oothu billahi minash-shaytanir-rajeem",
+    "translation": "I seek refuge in Allah from the accursed Satan.",
+    "reference": "Bukhari 6115"
+  },
+  {
+    "id": "dua-55",
+    "title": "Dua When Drinking Milk",
+    "titleAr": "دعاء شرب اللبن",
+    "category": "Food",
+    "arabic": "اللَّهُمَّ بَارِكْ لَنَا فِيهِ وَزِدْنَا مِنْهُ",
+    "transliteration": "Allahumma barik lana feehi wa zidna minhu",
+    "translation": "O Allah, bless us in it and give us more of it.",
+    "reference": "Tirmidhi 3455"
   }
 ]

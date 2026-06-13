@@ -56,8 +56,8 @@
         <h3 class="font-black text-xs uppercase tracking-wider border-b-2 border-ink pb-2">Quran Settings</h3>
 
         <!-- Reciter -->
-        <div>
-          <label class="block text-[10px] font-black uppercase tracking-wider text-ink/60 mb-1.5">Reciter</label>
+        <div role="group" aria-labelledby="reciter-label">
+          <div id="reciter-label" class="text-[10px] font-black uppercase tracking-wider text-ink/60 mb-1.5">Reciter</div>
           <div class="flex flex-col gap-1">
             {#each RECITERS as r}
               <button
@@ -75,8 +75,8 @@
         </div>
 
         <!-- Translation -->
-        <div>
-          <label class="block text-[10px] font-black uppercase tracking-wider text-ink/60 mb-1.5">Translation</label>
+        <div role="group" aria-labelledby="translation-label">
+          <div id="translation-label" class="text-[10px] font-black uppercase tracking-wider text-ink/60 mb-1.5">Translation</div>
           <div class="flex flex-col gap-1">
             {#each TRANSLATIONS as t}
               <button

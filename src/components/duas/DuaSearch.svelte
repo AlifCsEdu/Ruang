@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { SearchIcon } from '../icons/index';
 
   interface Props {
@@ -11,6 +12,7 @@
   let activeCategory = $state('');
 
   let filteredCount = $state(0);
+  let mounted = $state(false);
 
   function applyFilter() {
     const list = document.getElementById('duas-list');
@@ -39,9 +41,13 @@
     filteredCount = count;
   }
 
-  // Reactive filter on search/category change
+  onMount(() => {
+    mounted = true;
+  });
+
+  // Reactive filter on search/category change (only after mount to avoid hydration issues)
   $effect(() => {
-    // Touch both to trigger reactivity
+    if (!mounted) return;
     void search;
     void activeCategory;
     applyFilter();

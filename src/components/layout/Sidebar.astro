@@ -4,25 +4,211 @@ import { NAV_LINKS, isActive } from './NavLinks';
 const currentPath = Astro.url.pathname;
 ---
 
-<aside class="hidden lg:flex flex-col sticky top-14 w-56 h-[calc(100vh-3.5rem)] border-r-4 border-ink bg-canvas overflow-y-auto shrink-0">
-  <div class="flex flex-col gap-1 p-3">
+<aside
+  id="sidebar"
+  class="hidden md:flex flex-col sticky top-14 h-[calc(100vh-3.5rem)] border-r-4 border-ink bg-canvas overflow-y-auto shrink-0 transition-[width] duration-200 ease-in-out sidebar-expanded group/sidebar"
+>
+  <!-- Collapse toggle button -->
+  <button
+    id="sidebar-toggle"
+    class="flex items-center justify-center w-full py-2.5 border-b-2 border-ink/20 hover:bg-white/50 transition-colors duration-75 cursor-pointer group"
+    aria-label="Toggle sidebar (Press [)"
+    title="Collapse / Expand (Press [)"
+  >
+    <svg id="sidebar-icon-collapse" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-ink/40 group-hover:text-ink transition-colors sidebar-toggle-icon">
+      <path d="M11 19l-7-7 7-7"/><path d="M18 19l-7-7 7-7"/>
+    </svg>
+    <svg id="sidebar-icon-expand" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-ink/40 group-hover:text-ink transition-colors sidebar-toggle-icon hidden">
+      <path d="M13 5l7 7-7 7"/><path d="M6 5l7 7-7 7"/>
+    </svg>
+  </button>
+
+  <nav class="flex flex-col gap-1 p-2 sidebar-nav-links flex-1" aria-label="Main navigation">
     {NAV_LINKS.map((link) => {
       const active = isActive(currentPath, link.href);
       return (
         <a
           href={link.href}
+          title={link.label}
           class:list={[
-            'flex items-center gap-3 px-3 py-2.5 font-bold text-sm border-2 transition-all duration-75',
+            'flex items-center gap-3 px-3 py-2.5 font-bold text-sm border-2 transition-all duration-75 relative',
             'focus:outline-none focus:ring-3 focus:ring-accent-blue',
+            'sidebar-link group/link',
             active
               ? 'border-ink bg-accent-yellow shadow-[4px_4px_0px_0px_#0D0D0D]'
               : 'border-transparent hover:border-ink/30 hover:bg-white',
           ]}
         >
+          <!-- Active indicator dot for collapsed mode -->
+          {active && (
+            <span class="sidebar-active-dot absolute -left-[5px] top-1/2 -translate-y-1/2 w-2 h-2 bg-accent-pink border border-ink rounded-full" />
+          )}
           <span class="shrink-0 text-ink" set:html={link.icon(18)} />
-          <span class="uppercase tracking-wider truncate">{link.label}</span>
+          <span class="sidebar-link-label uppercase tracking-wider truncate">{link.label}</span>
+          {/* Tooltip for collapsed state */}
+          <span class="sidebar-tooltip absolute left-full ml-2 px-2 py-1 bg-ink text-white text-[10px] font-black uppercase tracking-wider whitespace-nowrap border-2 border-ink shadow-[2px_2px_0px_0px_#0D0D0D] z-50 opacity-0 pointer-events-none group-hover/link:opacity-100 transition-opacity duration-100">{link.label}</span>
         </a>
       );
     })}
+  </nav>
+
+  <!-- Footer: keyboard shortcut hint + streak -->
+  <div class="border-t-2 border-ink/20 p-2 sidebar-footer">
+    <div class="sidebar-footer-content flex flex-col gap-1">
+      <p class="text-[8px] font-bold text-ink/30 text-center uppercase tracking-wider sidebar-footer-label">Press <kbd class="px-1 py-0.5 bg-white border border-ink/30 text-ink/50 font-mono">[</kbd> to toggle</p>
+      <div id="sidebar-streak" class="hidden items-center justify-center gap-1 text-[9px] font-black text-accent-green">
+        <span>🔥</span><span id="sidebar-streak-count">0</span><span class="text-ink/30 font-bold">streak</span>
+      </div>
+    </div>
   </div>
 </aside>
+
+<style>
+  /* Expanded state (default for lg+) */
+  .sidebar-expanded { width: 14rem; }
+
+  /* Collapsed state */
+  .sidebar-collapsed { width: 4.5rem; }
+
+  /* Link layout */
+  .sidebar-link { justify-content: center; }
+  .sidebar-expanded .sidebar-link { justify-content: flex-start; }
+
+  /* Labels with smooth fade */
+  .sidebar-link-label {
+    display: inline;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.15s ease, width 0.2s ease;
+    max-width: 10rem;
+  }
+  .sidebar-collapsed .sidebar-link-label {
+    opacity: 0;
+    max-width: 0;
+    pointer-events: none;
+  }
+
+  /* Active dot — only show in collapsed */
+  .sidebar-active-dot { display: none; }
+  .sidebar-collapsed .sidebar-active-dot { display: block; }
+
+  /* Tooltips — only show in collapsed */
+  .sidebar-tooltip { display: none; }
+  .sidebar-collapsed .sidebar-tooltip { display: block; }
+
+  /* Nav links padding */
+  .sidebar-collapsed .sidebar-nav-links { padding: 0.5rem 0.25rem; }
+
+  /* Toggle icons */
+  .sidebar-expanded #sidebar-icon-collapse { display: block; }
+  .sidebar-expanded #sidebar-icon-expand { display: none; }
+  .sidebar-collapsed #sidebar-icon-collapse { display: none; }
+  .sidebar-collapsed #sidebar-icon-expand { display: block; }
+
+  /* Footer — hide label text in collapsed */
+  .sidebar-collapsed .sidebar-footer-label { display: none; }
+  .sidebar-collapsed .sidebar-footer-content { align-items: center; }
+
+  /* At md breakpoint (768-1023px), always icon-only regardless of toggle */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .sidebar-expanded { width: 4.5rem; }
+    .sidebar-expanded .sidebar-link { justify-content: center; }
+    .sidebar-expanded .sidebar-link-label { opacity: 0; max-width: 0; pointer-events: none; }
+    .sidebar-expanded .sidebar-active-dot { display: block; }
+    .sidebar-expanded .sidebar-tooltip { display: block; }
+    .sidebar-expanded #sidebar-icon-collapse { display: none; }
+    .sidebar-expanded #sidebar-icon-expand { display: block; }
+    .sidebar-expanded .sidebar-footer-label { display: none; }
+    #sidebar-toggle { display: none; }
+  }
+</style>
+
+<script>
+  // Sidebar collapse/expand with localStorage, keyboard shortcut, streak badge
+  const SIDEBAR_KEY = 'ruang_sidebar_collapsed';
+  const TRACKER_KEY = 'ruang_prayer_tracker';
+
+  function initSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const toggle = document.getElementById('sidebar-toggle');
+    if (!sidebar || !toggle) return;
+
+    // Load saved preference
+    const saved = localStorage.getItem(SIDEBAR_KEY);
+    if (saved === 'true') {
+      sidebar.classList.remove('sidebar-expanded');
+      sidebar.classList.add('sidebar-collapsed');
+    }
+
+    // Toggle function
+    function toggleSidebar() {
+      const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+      if (isCollapsed) {
+        sidebar.classList.remove('sidebar-collapsed');
+        sidebar.classList.add('sidebar-expanded');
+        localStorage.setItem(SIDEBAR_KEY, 'false');
+      } else {
+        sidebar.classList.remove('sidebar-expanded');
+        sidebar.classList.add('sidebar-collapsed');
+        localStorage.setItem(SIDEBAR_KEY, 'true');
+      }
+    }
+
+    toggle.addEventListener('click', toggleSidebar);
+
+    // Keyboard shortcut: [ key
+    function handleKeydown(e: KeyboardEvent) {
+      // Don't trigger when typing in inputs
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement || e.target instanceof HTMLSelectElement) return;
+      if (e.key === '[' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        toggleSidebar();
+      }
+    }
+    // Remove old listener if any (for Astro navigation)
+    document.removeEventListener('keydown', (window as any).__sidebarKeyHandler);
+    (window as any).__sidebarKeyHandler = handleKeydown;
+    document.addEventListener('keydown', handleKeydown);
+
+    // Update streak badge
+    updateStreakBadge();
+  }
+
+  function updateStreakBadge() {
+    const streakEl = document.getElementById('sidebar-streak');
+    const countEl = document.getElementById('sidebar-streak-count');
+    if (!streakEl || !countEl) return;
+
+    try {
+      const raw = localStorage.getItem(TRACKER_KEY);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      let count = 0;
+      const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kuala_Lumpur' }));
+      for (let i = 0; i < 365; i++) {
+        const d = new Date(now);
+        d.setDate(d.getDate() - i);
+        const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        const record = data[key];
+        if (record && record.fajr && record.dhuhr && record.asr && record.maghrib && record.isha) {
+          count++;
+        } else if (i > 0) { break; }
+      }
+      if (count > 0) {
+        countEl.textContent = String(count);
+        streakEl.classList.remove('hidden');
+        streakEl.classList.add('flex');
+      }
+    } catch { /* empty */ }
+  }
+
+  // Run on load
+  initSidebar();
+
+  // Also run on Astro page navigation
+  document.addEventListener('astro:page-load', initSidebar);
+
+  // Listen for tracker sync to update streak
+  window.addEventListener('prayer-tracker-sync', updateStreakBadge);
+</script>

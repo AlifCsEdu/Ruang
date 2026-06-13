@@ -4,7 +4,7 @@ import { BOTTOM_NAV_LINKS, isActive } from './NavLinks';
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around h-16 border-t-4 border-ink bg-white">
+<nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around h-16 border-t-4 border-ink bg-white">
   {BOTTOM_NAV_LINKS.map((link) => {
     const active = isActive(currentPath, link.href);
     return (

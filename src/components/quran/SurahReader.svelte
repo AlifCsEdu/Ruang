@@ -40,29 +40,38 @@
 
   let audioEl: HTMLAudioElement | null = $state(null);
   let verseContainer = $state<HTMLDivElement | null>(null);
+  let winWidth = $state(1024);
 
   onMount(async () => {
-    // Load saved preferences
-    const savedReciter = localStorage.getItem('ruang_quran_reciter');
-    const savedTranslation = localStorage.getItem('ruang_quran_translation');
-    if (savedReciter) reciter = parseInt(savedReciter, 10);
-    if (savedTranslation) translation = parseInt(savedTranslation, 10);
+    try {
+      winWidth = window.innerWidth;
+      // Load saved preferences
+      const savedReciter = localStorage.getItem('ruang_quran_reciter');
+      const savedTranslation = localStorage.getItem('ruang_quran_translation');
+      if (savedReciter) reciter = parseInt(savedReciter, 10);
+      if (savedTranslation) translation = parseInt(savedTranslation, 10);
 
-    // Check for last read position
-    const lastRead = getLastRead();
-    if (lastRead && lastRead.surah === chapter) {
-      // Could scroll to last read verse in the future
+      // Check for last read position
+      const lastRead = getLastRead();
+      if (lastRead && lastRead.surah === chapter) {
+        // Could scroll to last read verse in the future
+      }
+
+      await fetchVerses();
+
+      // Listen for settings changes
+      window.addEventListener('quran-settings-changed', handleSettingsChange as EventListener);
+    } catch (err) {
+      error = 'Failed to initialize reader. Please refresh the page.';
+      loading = false;
     }
-
-    await fetchVerses();
-
-    // Listen for settings changes
-    window.addEventListener('quran-settings-changed', handleSettingsChange as EventListener);
   });
 
   onDestroy(() => {
     audioEl?.pause();
-    window.removeEventListener('quran-settings-changed', handleSettingsChange as EventListener);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('quran-settings-changed', handleSettingsChange as EventListener);
+    }
   });
 
   function handleSettingsChange(e: CustomEvent<{ reciter: number; translation: number }>) {
@@ -105,19 +114,17 @@
     if (page < 1 || page > totalPages) return;
     currentPage = page;
     fetchVerses();
-    // Scroll to top of verses
     verseContainer?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  // Save last-read when scrolling through verses
   function handleVerseVisible(verseNum: number) {
     if (surahInfo) {
       saveLastRead(chapter, verseNum, surahInfo.englishName);
     }
   }
 
-  // --- Word tooltip handlers ---
   function handleWordHover(e: MouseEvent, word: Word) {
+    winWidth = window.innerWidth;
     activeWord = {
       text: word.text,
       transliteration: word.transliteration,
@@ -137,7 +144,6 @@
     }
   }
 
-  // --- Audio controls ---
   function togglePlay(verseNum: number) {
     if (!audioEl) return;
     const verse = verses.find((v) => v.number === verseNum);
@@ -178,12 +184,10 @@
     return audioState.playing && audioState.currentVerse === verseNum;
   }
 
-  // Build transliteration line from words
   function verseTransliteration(v: Verse): string {
     return v.words?.map((w) => w.transliteration).filter(Boolean).join(' ') ?? '';
   }
 
-  // Pagination helpers
   function getPageNumbers(): (number | '...')[] {
     const pages: (number | '...')[] = [];
     if (totalPages <= 7) {
@@ -200,7 +204,6 @@
     return pages;
   }
 
-  // SVG icon helpers
   const playIcon = '<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><polygon points="3,1 14,8 3,15"/></svg>';
   const pauseIcon = '<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="1" width="4" height="14"/><rect x="10" y="1" width="4" height="14"/></svg>';
   const stopIcon = '<svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><rect x="2" y="2" width="12" height="12"/></svg>';
@@ -211,41 +214,41 @@
   <audio bind:this={audioEl} onended={handleAudioEnded} preload="none"></audio>
 
   <!-- Controls bar -->
-  <div class="flex flex-wrap items-center gap-2 sticky top-14 bg-canvas/95 py-2 z-10 border-b-2 border-ink">
+  <div class="flex flex-wrap items-center gap-2 sticky top-14 bg-canvas/95 backdrop-blur-sm py-3 z-10 border-b-4 border-ink mb-2">
     <!-- Display mode toggle -->
-    <div class="flex border-2 border-ink">
+    <div class="flex border-2 border-ink shadow-[2px_2px_0px_0px_#0D0D0D]">
       <button
         onclick={() => (displayMode = 'standard')}
-        class="px-3 py-1 text-xs font-black uppercase tracking-wider transition-colors duration-75
+        class="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider transition-colors duration-75
                {displayMode === 'standard' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-canvas'}"
       >Standard</button>
       <button
         onclick={() => (displayMode = 'word-by-word')}
-        class="px-3 py-1 text-xs font-black uppercase tracking-wider border-l-2 border-ink transition-colors duration-75
+        class="px-3 py-1.5 text-[10px] font-black uppercase tracking-wider border-l-2 border-ink transition-colors duration-75
                {displayMode === 'word-by-word' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-canvas'}"
-      >Word-by-Word</button>
+      >Perkataan</button>
     </div>
 
     <!-- Translation toggle -->
     <button
       onclick={() => (showTranslation = !showTranslation)}
-      class="btn-brutal-sm text-[10px] {showTranslation ? 'bg-accent-blue text-white border-ink' : ''}"
-    >{showTranslation ? '✓ Translation' : 'Translation'}</button>
+      class="chip-brutal {showTranslation ? 'bg-accent-blue text-white' : 'bg-white'} transition-colors"
+    >{showTranslation ? '✓ Terjemahan' : 'Terjemahan'}</button>
 
     <!-- Transliteration toggle -->
     <button
       onclick={() => (showTransliteration = !showTransliteration)}
-      class="btn-brutal-sm text-[10px] {showTransliteration ? 'bg-accent-blue text-white border-ink' : ''}"
-    >{showTransliteration ? '✓ Transliteration' : 'Transliteration'}</button>
+      class="chip-brutal {showTransliteration ? 'bg-accent-blue text-white' : 'bg-white'} transition-colors"
+    >{showTransliteration ? '✓ Rumi' : 'Rumi'}</button>
 
     <!-- Settings -->
     <QuranSettings currentReciter={reciter} currentTranslation={translation} />
 
-    <span class="text-xs font-black uppercase tracking-wider text-ink/40 ml-auto">
+    <span class="text-[10px] font-black uppercase tracking-wider text-ink/40 ml-auto">
       {#if isShortSurah}
-        {verses.length} verses
+        {verses.length} ayat
       {:else}
-        Page {currentPage}/{totalPages}
+        Halaman {currentPage}/{totalPages}
       {/if}
     </span>
   </div>
@@ -254,7 +257,7 @@
   {#if loading}
     <div class="flex items-center justify-center py-16">
       <div class="card-brutal-sm text-center">
-        <p class="font-black text-ink/40 uppercase tracking-wider animate-pulse">Loading verses...</p>
+        <p class="font-black text-ink/40 uppercase tracking-wider animate-pulse">Memuatkan ayat-ayat...</p>
       </div>
     </div>
 
@@ -262,16 +265,17 @@
   {:else if error}
     <div class="card-brutal-sm bg-accent-pink text-white text-center">
       <p class="font-bold text-sm">{error}</p>
-      <button onclick={fetchVerses} class="btn-brutal-sm mt-2 bg-white text-ink text-xs">Retry</button>
+      <button onclick={fetchVerses} class="btn-brutal-sm mt-2 bg-white text-ink text-xs">Cuba Lagi</button>
     </div>
 
   <!-- Verses -->
   {:else}
     <div bind:this={verseContainer} class="flex flex-col gap-4">
       {#each verses as verse (verse.number)}
-        {@const playing = isPlaying(verse.number)}
         <div
-          class="card-brutal-sm {playing ? 'verse-playing' : ''}"
+          class="verse-card {isPlaying(verse.number) ? 'verse-playing' : ''}"
+          role="article"
+          aria-label="Verse {verse.number}"
           onmouseenter={() => handleVerseVisible(verse.number)}
         >
           <!-- Verse header -->
@@ -285,10 +289,10 @@
                 onclick={() => togglePlay(verse.number)}
                 class="w-8 h-8 border-2 border-ink flex items-center justify-center shrink-0 transition-all duration-75
                        active:translate-x-0.5 active:translate-y-0.5 active:shadow-none
-                       {playing ? 'bg-accent-yellow shadow-[2px_2px_0px_0px_#0D0D0D]' : 'bg-white hover:bg-canvas'}"
-                aria-label={playing ? 'Pause verse {verse.number}' : 'Play verse {verse.number}'}
+                       {isPlaying(verse.number) ? 'bg-accent-yellow shadow-[2px_2px_0px_0px_#0D0D0D]' : 'bg-white hover:bg-canvas'}"
+                aria-label={isPlaying(verse.number) ? `Pause verse ${verse.number}` : `Play verse ${verse.number}`}
               >
-                {@html playing ? pauseIcon : playIcon}
+                {@html isPlaying(verse.number) ? pauseIcon : playIcon}
               </button>
             {/if}
 
@@ -330,7 +334,7 @@
                   onmouseenter={(e) => handleWordHover(e, word)}
                   onmouseleave={() => (activeWord = null)}
                   onclick={(e) => handleWordClick(e, word)}
-                  aria-label="{word.translation}"
+                  aria-label={word.translation}
                 >
                   <span class="arabic-text text-2xl leading-normal">{word.text}</span>
                   {#if showTransliteration && word.transliteration}
@@ -380,9 +384,27 @@
     {/if}
   {/if}
 
-  <!-- Fixed audio control bar (visible when audio is playing) -->
-  {#if audioState.currentVerse > 0}
-    <div class="audio-bar">
+  <!-- Word tooltip -->
+  {#if activeWord}
+    <div
+      class="word-tooltip fixed z-[9999] border-4 border-ink bg-accent-yellow p-3 shadow-[4px_4px_0px_0px_#0D0D0D] max-w-xs pointer-events-none"
+      style="left: {Math.min(activeWord.x + 10, winWidth - 200)}px; top: {activeWord.y - 80}px;"
+    >
+      <p class="arabic-text text-xl leading-normal" dir="rtl" lang="ar">{activeWord.text}</p>
+      {#if activeWord.transliteration}
+        <p class="transliteration-text mt-1">{activeWord.transliteration}</p>
+      {/if}
+      {#if activeWord.translation}
+        <p class="text-xs font-bold text-ink/70 mt-1">{activeWord.translation}</p>
+      {/if}
+    </div>
+  {/if}
+</div>
+
+<!-- Fixed audio control bar -->
+{#if audioState.currentVerse > 0}
+  <div class="fixed bottom-20 left-0 right-0 bg-white border-t-4 border-ink p-3 z-40 shadow-[0_-4px_0px_0px_#0D0D0D]">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2">
         <span class="text-xs font-black uppercase tracking-wider text-ink/60">Ayat</span>
         <span class="font-black text-lg tabular-nums">{audioState.currentVerse}</span>
@@ -415,21 +437,5 @@
         class="btn-brutal-sm text-[10px] {audioState.autoAdvance ? 'bg-accent-green text-white border-ink' : ''}"
       >{audioState.autoAdvance ? '✓ Auto' : 'Auto'}</button>
     </div>
-  {/if}
-
-  <!-- Word tooltip -->
-  {#if activeWord}
-    <div
-      class="word-tooltip fixed z-[9999] border-4 border-ink bg-accent-yellow p-3 shadow-[4px_4px_0px_0px_#0D0D0D] max-w-xs pointer-events-none"
-      style="left: {Math.min(activeWord.x + 10, window.innerWidth - 200)}px; top: {activeWord.y - 80}px;"
-    >
-      <p class="arabic-text text-xl leading-normal" dir="rtl" lang="ar">{activeWord.text}</p>
-      {#if activeWord.transliteration}
-        <p class="transliteration-text mt-1">{activeWord.transliteration}</p>
-      {/if}
-      {#if activeWord.translation}
-        <p class="text-xs font-bold text-ink/70 mt-1">{activeWord.translation}</p>
-      {/if}
-    </div>
-  {/if}
-</div>
+  </div>
+{/if}

@@ -4,23 +4,29 @@ import QuranBrowser from '../../components/quran/QuranBrowser.svelte';
 ---
 
 <BaseLayout title="Al-Quran — Ruang">
-  <div class="max-w-4xl mx-auto px-4 py-8" transition:name="page-quran">
+  <div class="max-w-5xl mx-auto px-4 py-8">
     <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-black uppercase tracking-wider">Al-Quran</h1>
-      <p class="text-sm font-bold text-ink/60 mt-1">114 Surahs — The Noble Quran</p>
+    <div class="flex items-center justify-between mb-4">
+      <div>
+        <h1 class="text-3xl font-black uppercase tracking-wider">Al-Quran</h1>
+        <p class="text-sm font-bold text-ink/60 mt-1">114 Surah · 30 Juz · 6,236 Ayat</p>
+      </div>
+      <a href="/settings" class="btn-brutal-sm text-xs">⚙️ Tetapan</a>
     </div>
 
-    <!-- Bismillah -->
-    <div class="card-brutal text-center mb-8 bg-accent-green/10">
-      <p class="arabic-text text-2xl" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>
-      <p class="text-sm text-ink/60 mt-2">In the name of Allah, the Most Gracious, the Most Merciful</p>
+    <!-- Accent bar -->
+    <div class="accent-bar mb-6"></div>
+
+    <!-- Bismillah hero -->
+    <div class="card-hero text-center mb-8 bg-accent-green/5 relative overflow-hidden">
+      <p class="arabic-text text-3xl" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>
+      <p class="text-sm text-ink/50 mt-3 font-bold">Dengan nama Allah, Yang Maha Pemurah, lagi Maha Mengasihani</p>
     </div>
 
     <!-- Interactive Browser (search, filter, last-read, juz) -->
     <QuranBrowser client:load>
       <div class="text-center py-12 animate-pulse">
-        <p class="font-black text-ink/40 uppercase tracking-wider">Loading surahs...</p>
+        <p class="font-black text-ink/40 uppercase tracking-wider">Memuatkan senarai surah...</p>
       </div>
     </QuranBrowser>
   </div>

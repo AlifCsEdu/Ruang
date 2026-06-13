@@ -3,14 +3,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import DuaSearch from '../../components/duas/DuaSearch.svelte';
 
-const duas = await getCollection('duas');
+const duas = await getCollection('duas').catch(() => []);
 
 // Get unique categories
 const categories = [...new Set(duas.map((d) => d.data.category))].sort();
 ---
 
 <BaseLayout title="Duas — Ruang">
-  <div class="max-w-3xl mx-auto px-4 py-8" transition:name="page-duas">
+  <div class="max-w-3xl mx-auto px-4 py-8">
     <!-- Header -->
     <div class="mb-8">
       <h1 class="text-3xl font-black uppercase tracking-wider">Duas</h1>

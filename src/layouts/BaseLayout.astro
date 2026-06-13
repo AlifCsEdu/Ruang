@@ -43,7 +43,7 @@ const { title = 'Ruang — Your Muslim Companion' } = Astro.props;
       rel="stylesheet"
     />
   </head>
-  <body class="bg-canvas text-ink font-[family-name:var(--font-ui)] min-h-screen flex flex-col">
+  <body class="bg-dots text-ink font-[family-name:var(--font-ui)] min-h-screen flex flex-col">
     <!-- Sticky top navbar -->
     <Navbar />
 
@@ -52,7 +52,7 @@ const { title = 'Ruang — Your Muslim Companion' } = Astro.props;
       <Sidebar />
 
       <!-- Main content area -->
-      <main class="flex-1 pb-20 lg:pb-8">
+      <main class="flex-1 pb-20 md:pb-8">
         <slot />
       </main>
     </div>

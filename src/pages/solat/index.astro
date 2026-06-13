@@ -1,51 +1,51 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import SolatWindow from '../../components/solat/SolatWindow.svelte';
-import SunnahTimesPanel from '../../components/solat/SunnahTimesPanel.svelte';
-import SolatSettingsPanel from '../../components/solat/SolatSettingsPanel.svelte';
-import PrayerTrackerWidget from '../../components/solat/PrayerTrackerWidget.svelte';
+import PrayerDashboard from '../../components/solat/PrayerDashboard.svelte';
 ---
 
 <BaseLayout title="Waktu Solat — Ruang">
-  <div class="max-w-6xl mx-auto px-4 py-8" transition:name="page-solat">
-    <h1 class="text-3xl font-black uppercase tracking-wider mb-6">Waktu Solat</h1>
-
-    <!-- Mobile: single column stack -->
-    <div class="lg:grid lg:grid-cols-[1fr_340px] lg:gap-6">
-      <!-- Main panel -->
-      <div class="flex flex-col gap-6">
-        <div class="card-brutal">
-          <SolatWindow client:load />
-        </div>
-
-        <!-- Sunnah panel (below on mobile, side on desktop) -->
-        <div class="card-brutal-sm lg:hidden">
-          <SunnahTimesPanel client:load />
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Page header with accent bar -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <h1 class="text-3xl font-black uppercase tracking-wider">Waktu Solat</h1>
+        <div class="flex items-center gap-2">
+          <a href="/tracker" class="btn-brutal-sm text-xs">📊 Tracker</a>
+          <a href="/settings" class="btn-brutal-sm text-xs">⚙️ Tetapan</a>
         </div>
       </div>
+      <p class="text-sm font-bold text-ink/60">Jadual solat harian, countdown, dan tracker untuk Malaysia.</p>
+    </div>
 
-      <!-- Side panel (desktop) -->
-      <aside class="hidden lg:flex lg:flex-col lg:gap-4">
-        <div class="card-brutal-sm">
-          <SunnahTimesPanel client:load />
-        </div>
-        <div class="card-brutal-sm">
-          <PrayerTrackerWidget client:load />
-        </div>
-        <div class="card-brutal-sm">
-          <SolatSettingsPanel client:load />
-        </div>
-      </aside>
+    <div class="accent-bar mb-6"></div>
 
-      <!-- Mobile-only: tracker + settings below main -->
-      <div class="flex flex-col gap-4 lg:hidden mt-6">
-        <div class="card-brutal-sm">
-          <PrayerTrackerWidget client:load />
+    <!-- Main prayer dashboard -->
+    <div class="card-hero">
+      <PrayerDashboard client:load>
+        <div class="text-center py-16 animate-pulse">
+          <p class="font-black text-ink/40 uppercase tracking-wider">Loading prayer times...</p>
         </div>
-        <div class="card-brutal-sm">
-          <SolatSettingsPanel client:load />
-        </div>
-      </div>
+      </PrayerDashboard>
+    </div>
+
+    <!-- Quick links footer -->
+    <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2">
+      <a href="/quran" class="card-brutal-sm text-center hover:bg-accent-green/10 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+        <p class="text-lg mb-1">📖</p>
+        <p class="text-[10px] font-black uppercase tracking-wider">Al-Quran</p>
+      </a>
+      <a href="/duas" class="card-brutal-sm text-center hover:bg-accent-pink/10 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+        <p class="text-lg mb-1">🤲</p>
+        <p class="text-[10px] font-black uppercase tracking-wider">Doa</p>
+      </a>
+      <a href="/tasbih" class="card-brutal-sm text-center hover:bg-accent-blue/10 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+        <p class="text-lg mb-1">📿</p>
+        <p class="text-[10px] font-black uppercase tracking-wider">Tasbih</p>
+      </a>
+      <a href="/hijri" class="card-brutal-sm text-center hover:bg-accent-yellow/20 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
+        <p class="text-lg mb-1">📅</p>
+        <p class="text-[10px] font-black uppercase tracking-wider">Kalendar</p>
+      </a>
     </div>
   </div>
 </BaseLayout>

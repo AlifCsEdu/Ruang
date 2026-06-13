@@ -10,10 +10,12 @@
   let lastRead = $state<LastRead | null>(null);
   let bookmarks = $state<Bookmark[]>([]);
   let showJuz = $state(false);
+  let showBookmarks = $state(false);
+  let viewMode = $state<'grid' | 'list'>('grid');
 
   onMount(() => {
     lastRead = getLastRead();
-    bookmarks = getBookmarks().slice(0, 5);
+    bookmarks = getBookmarks();
   });
 
   const filtered = $derived(
@@ -29,6 +31,8 @@
       );
     })
   );
+
+  const recentBookmarks = $derived(bookmarks.slice(0, 8));
 </script>
 
 <div class="flex flex-col gap-6">
@@ -38,7 +42,7 @@
       <input
         type="text"
         bind:value={search}
-        placeholder="Search surahs..."
+        placeholder="Cari surah... (nama, nombor, makna)"
         class="input-brutal w-full text-sm"
       />
     </div>
@@ -47,7 +51,7 @@
         onclick={() => (filter = 'all')}
         class="px-3 py-2 text-xs font-black uppercase tracking-wider transition-colors duration-75
                {filter === 'all' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-canvas'}"
-      >All</button>
+      >Semua</button>
       <button
         onclick={() => (filter = 'Meccan')}
         class="px-3 py-2 text-xs font-black uppercase tracking-wider border-l-4 border-ink transition-colors duration-75
@@ -65,61 +69,114 @@
   {#if lastRead}
     <a
       href={`/quran/${lastRead.surah}`}
-      class="card-brutal-sm flex items-center gap-3 bg-accent-green/10 hover:bg-accent-green/20 transition-colors duration-75
-             active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+      class="card-brutal flex items-center gap-4 bg-accent-green/10 hover:bg-accent-green/20 transition-colors duration-75
+             active:translate-x-1 active:translate-y-1 active:shadow-none group"
     >
-      <div class="w-10 h-10 bg-accent-green text-white flex items-center justify-center shrink-0">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <div class="w-14 h-14 bg-accent-green text-white flex items-center justify-center shrink-0 shadow-[4px_4px_0px_0px_#0D0D0D]">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
         </svg>
       </div>
       <div class="flex-1 min-w-0">
-        <p class="text-[10px] font-black uppercase tracking-wider text-accent-green">Continue Reading</p>
-        <p class="font-black text-sm truncate">{lastRead.surahName} — Ayah {lastRead.ayah}</p>
+        <p class="text-[10px] font-black uppercase tracking-wider text-accent-green">Bacaan Terakhir</p>
+        <p class="font-black text-lg truncate">{lastRead.surahName}</p>
+        <p class="text-xs font-bold text-ink/50">Ayat {lastRead.ayah}</p>
       </div>
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="shrink-0 text-ink/40">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="shrink-0 text-ink/40 group-hover:text-ink transition-colors">
         <path d="M9 18l6-6-6-6"/>
       </svg>
     </a>
   {/if}
 
-  <!-- Juz Toggle -->
-  <div class="flex items-center gap-3">
+  <!-- Action buttons row -->
+  <div class="flex items-center gap-2 flex-wrap">
     <button
       onclick={() => (showJuz = !showJuz)}
-      class="btn-brutal-sm text-[10px] {showJuz ? 'bg-accent-yellow border-ink' : ''}"
-    >{showJuz ? '✓ Browse by Juz' : 'Browse by Juz'}</button>
-    {#if bookmarks.length > 0}
-      <span class="text-[10px] font-bold text-ink/40">{bookmarks.length} bookmark{bookmarks.length !== 1 ? 's' : ''}</span>
-    {/if}
+      class="chip-brutal {showJuz ? 'bg-accent-yellow' : 'bg-white'} transition-colors"
+    >{showJuz ? '✓ Juz' : 'Juz 1-30'}</button>
+
+    <button
+      onclick={() => (showBookmarks = !showBookmarks)}
+      class="chip-brutal {showBookmarks ? 'bg-accent-pink text-white' : 'bg-white'} transition-colors"
+    >{showBookmarks ? '✓ Bookmarks' : `♥ ${bookmarks.length}`}</button>
+
+    <span class="ml-auto flex items-center gap-1">
+      <button
+        onclick={() => (viewMode = 'grid')}
+        class="w-8 h-8 border-2 border-ink flex items-center justify-center transition-colors {viewMode === 'grid' ? 'bg-ink text-white' : 'bg-white hover:bg-canvas'}"
+        title="Grid view"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8"/></svg>
+      </button>
+      <button
+        onclick={() => (viewMode = 'list')}
+        class="w-8 h-8 border-2 border-ink border-l-0 flex items-center justify-center transition-colors {viewMode === 'list' ? 'bg-ink text-white' : 'bg-white hover:bg-canvas'}"
+        title="List view"
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="4" width="18" height="3"/><rect x="3" y="10.5" width="18" height="3"/><rect x="3" y="17" width="18" height="3"/></svg>
+      </button>
+    </span>
   </div>
 
   <!-- Juz Grid -->
   {#if showJuz}
-    <div class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-10 gap-2">
-      {#each JUZ_DATA as j}
-        <a
-          href={`/quran/${j.startSurah}`}
-          class="card-brutal-sm text-center p-2 hover:bg-accent-yellow/20 transition-colors duration-75
-                 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-        >
-          <p class="font-black text-lg">{j.juz}</p>
-          <p class="text-[9px] font-bold text-ink/40 uppercase">Juz</p>
-        </a>
-      {/each}
+    <div class="animate-slide-up">
+      <p class="text-[10px] font-black uppercase tracking-wider text-ink/40 mb-2">30 Juz Al-Quran</p>
+      <div class="grid grid-cols-5 sm:grid-cols-6 lg:grid-cols-10 gap-2">
+        {#each JUZ_DATA as j}
+          <a
+            href={`/quran/${j.startSurah}`}
+            class="card-brutal-sm text-center p-2.5 hover:bg-accent-yellow/20 transition-colors duration-75
+                   active:translate-x-0.5 active:translate-y-0.5 active:shadow-none group"
+          >
+            <p class="font-black text-xl group-hover:text-accent-blue transition-colors">{j.juz}</p>
+            <p class="text-[8px] font-bold text-ink/40 uppercase">Juz</p>
+          </a>
+        {/each}
+      </div>
+    </div>
+  {/if}
+
+  <!-- Bookmarks section -->
+  {#if showBookmarks && recentBookmarks.length > 0}
+    <div class="animate-slide-up">
+      <p class="text-[10px] font-black uppercase tracking-wider text-ink/40 mb-2">Bookmarks Terbaru</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {#each recentBookmarks as bm}
+          <a
+            href={`/quran/${bm.surah}`}
+            class="card-brutal-sm flex items-center gap-3 hover:bg-accent-pink/10 transition-colors duration-75
+                   active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+          >
+            <span class="text-accent-pink text-lg">♥</span>
+            <div class="min-w-0 flex-1">
+              <p class="font-black text-xs truncate">{bm.surahName} : {bm.ayah}</p>
+              <p class="text-[9px] text-ink/40 font-bold">Surah {bm.surah}</p>
+            </div>
+          </a>
+        {/each}
+      </div>
+    </div>
+  {:else if showBookmarks}
+    <div class="card-brutal-sm text-center py-6">
+      <p class="text-sm font-bold text-ink/40">Tiada bookmarks lagi. Baca Al-Quran dan tanda ayat kegemaran anda.</p>
     </div>
   {/if}
 
   <!-- Surah Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+  <div class={viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3' : 'flex flex-col gap-1.5'}>
     {#each filtered as surah (surah.number)}
       <a
         href={`/quran/${surah.number}`}
-        class="card-brutal-sm flex items-center gap-3 hover:bg-accent-yellow/20 transition-colors duration-75 group
-               active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+        class="flex items-center gap-3 hover:bg-accent-yellow/20 transition-all duration-75 group
+               active:translate-x-0.5 active:translate-y-0.5 active:shadow-none
+               {viewMode === 'grid'
+                 ? `card-brutal-sm ${surah.revelationType === 'Meccan' ? 'surah-card-meccan' : 'surah-card-medinan'}`
+                 : 'border-2 border-ink bg-white px-3 py-2 shadow-[2px_2px_0px_0px_#0D0D0D]'}"
       >
-        <!-- Number badge -->
-        <div class="w-10 h-10 bg-ink text-white flex items-center justify-center font-black text-sm shrink-0">
+        <!-- Number badge with revelation color -->
+        <div class="w-10 h-10 flex items-center justify-center font-black text-sm shrink-0 border-2 border-ink
+                    {surah.revelationType === 'Meccan' ? 'bg-accent-yellow text-ink' : 'bg-accent-blue text-white'}">
           {surah.number}
         </div>
 
@@ -133,18 +190,19 @@
             <span class="text-xs text-ink/50 font-bold">{surah.englishMeaning}</span>
             <span class="text-xs text-ink/30">·</span>
             <span class="text-xs text-ink/50 font-bold">{surah.versesCount} ayat</span>
-            <span class="text-xs text-ink/30">·</span>
-            <span class="text-xs font-bold px-1.5 py-0 border border-ink/30
-                         {surah.revelationType === 'Meccan' ? 'bg-accent-yellow/30' : 'bg-accent-blue/10'}">
-              {surah.revelationType === 'Meccan' ? 'Makkah' : 'Madinah'}
-            </span>
           </div>
         </div>
       </a>
     {:else}
       <div class="col-span-full text-center py-8">
-        <p class="font-bold text-ink/40 text-sm">No surahs found for "{search}"</p>
+        <p class="font-bold text-ink/40 text-sm">Tiada surah dijumpai untuk "{search}"</p>
       </div>
     {/each}
+  </div>
+
+  <!-- Stats footer -->
+  <div class="flex items-center justify-between text-[10px] font-bold text-ink/40 border-t-2 border-ink/20 pt-3">
+    <span>{filtered.length} surah ditunjukkan</span>
+    <span>114 surah keseluruhan</span>
   </div>
 </div>
