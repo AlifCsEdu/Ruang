@@ -81,6 +81,10 @@
     return count;
   });
 
+  // Verse of the Day
+  interface DailyVerse { key: string; ref: string; text: string; translation: string; chapter: number; verse: number; }
+  let dailyVerse = $state<DailyVerse | null>(null);
+
   // Quick action duas (random daily dua)
   let dailyDuaIndex = $derived.by(() => {
     const day = new Date().getDate();
@@ -111,6 +115,7 @@
 
     loadFromCache();
     fetchPrayers();
+    fetchVerseOfDay();
     updateClock();
     countdownInterval = setInterval(updateCountdown, 1000);
     clockInterval = setInterval(updateClock, 1000);
@@ -161,6 +166,13 @@
     const next = getNextPrayer(today);
     nextPrayerName = next.name;
     countdown = formatCountdown(next.time.getTime() - Date.now());
+  }
+
+  async function fetchVerseOfDay() {
+    try {
+      const res = await fetch('/api/quran/verse-of-day');
+      if (res.ok) dailyVerse = await res.json();
+    } catch { /* non-critical, silently fail */ }
   }
 
   function toggleTracker(prayer: string) {
@@ -300,6 +312,30 @@
       </a>
     </div>
   </div>
+
+  <!-- ===== VERSE OF THE DAY ===== -->
+  {#if dailyVerse}
+    <div class="card-brutal-sm bg-accent-green/5 border-accent-green">
+      <div class="flex items-start gap-3">
+        <div class="w-10 h-10 shrink-0 bg-accent-green/20 border-2 border-ink flex items-center justify-center mt-0.5">
+          <span class="text-lg">📖</span>
+        </div>
+        <div class="min-w-0 flex-1">
+          <p class="text-[10px] font-black uppercase tracking-wider text-accent-green">Ayat Hari Ini</p>
+          <p class="font-black text-sm mt-0.5">{dailyVerse.ref}</p>
+          {#if dailyVerse.text}
+            <p class="text-right font-bold text-base mt-2 leading-relaxed" dir="rtl" lang="ar">{dailyVerse.text}</p>
+          {/if}
+          {#if dailyVerse.translation}
+            <p class="text-xs font-bold text-ink/60 mt-2 italic leading-relaxed">"{dailyVerse.translation}"</p>
+          {/if}
+          <a href="/quran/{dailyVerse.chapter}#verse-{dailyVerse.verse}" class="text-[10px] font-black uppercase tracking-wider text-accent-green underline underline-offset-2 hover:text-ink mt-2 inline-block">
+            Surah {dailyVerse.chapter}:{dailyVerse.verse} →
+          </a>
+        </div>
+      </div>
+    </div>
+  {/if}
 
   <!-- ===== FEATURE WIDGETS ===== -->
   <div>
