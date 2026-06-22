@@ -66,6 +66,7 @@ export type Madhab = 'shafii' | 'hanafi';
 export interface SolatSettings {
   zone: string;
   recentZones: string[];
+  favoriteZones: string[];
   autoDetectLocation: boolean;
   lastKnownCoords: { lat: number; lng: number } | null;
   sunnahToggles: SunnahToggles;
@@ -96,4 +97,45 @@ export interface SunnahTimes {
 
 export interface EnhancedSolatDay extends SolatDay {
   sunnah?: SunnahTimes;
+}
+
+// === TV / Mosque Display Types ===
+
+export interface IqamahConfig {
+  fajr: number;    // minutes after Adhan (default 20)
+  dhuhr: number;   // default 15
+  asr: number;     // default 15
+  maghrib: number; // default 10
+  isha: number;    // default 15
+}
+
+export interface MosqueConfig {
+  name: string;           // e.g. "Masjid Al-Rahman"
+  zone: string;           // JAKIM zone
+  iqamah: IqamahConfig;
+  jumuaKhutbah: string;   // e.g. "1:00 PM"
+  hidden: boolean;        // hide from TV display
+}
+
+export interface StateFlag {
+  state: string;
+  emoji: string;     // placeholder emoji
+  svgPath: string;   // inline SVG path data for the state flag
+  color: string;     // primary color hex
+}
+
+export interface TvDisplaySettings {
+  mosqueName: string;
+  zone: string;
+  iqamah: IqamahConfig;
+  showSeconds: boolean;
+  use24h: boolean;
+  darkMode: boolean;
+  showHijri: boolean;
+  showQibla: boolean;
+  showSunnah: boolean;
+  fontSize: 'normal' | 'large' | 'xlarge' | 'xxlarge';
+  jumuaKhutbah: string;
+  adhanReminder: boolean;
+  screensaverPrevention: boolean;
 }

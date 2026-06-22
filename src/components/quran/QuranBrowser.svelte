@@ -2,20 +2,26 @@
   import { onMount } from 'svelte';
   import { SURAHS } from '../../lib/quran/surahs';
   import { JUZ_DATA } from '../../lib/quran/constants';
-  import { getLastRead, getBookmarks } from '../../lib/quran/bookmarks';
-  import type { LastRead, Bookmark } from '../../lib/quran/bookmarks';
+  import { getLastRead, getBookmarks, removeBookmark, updateBookmarkNote, clearAllBookmarks, addTagToBookmark, removeTagFromBookmark, getAllProgress } from '../../lib/quran/bookmarks';
+  import type { LastRead, Bookmark, ReadingProgress } from '../../lib/quran/bookmarks';
+  import BookmarksPanel from './BookmarksPanel.svelte';
 
   let search = $state('');
   let filter = $state<'all' | 'Meccan' | 'Medinan'>('all');
   let lastRead = $state<LastRead | null>(null);
   let bookmarks = $state<Bookmark[]>([]);
+  let progressList = $state<ReadingProgress[]>([]);
   let showJuz = $state(false);
   let showBookmarks = $state(false);
   let viewMode = $state<'grid' | 'list'>('grid');
 
+  const progressMap = $derived(new Map(progressList.map(p => [p.surah, p])));
+  const completedCount = $derived(progressList.filter(p => p.percentage >= 100).length);
+
   onMount(() => {
     lastRead = getLastRead();
     bookmarks = getBookmarks();
+    progressList = getAllProgress();
   });
 
   const filtered = $derived(
@@ -32,7 +38,34 @@
     })
   );
 
-  const recentBookmarks = $derived(bookmarks.slice(0, 8));
+  function refreshBookmarks() {
+    bookmarks = getBookmarks();
+  }
+
+  function handleDeleteBookmark(surah: number, ayah: number) {
+    removeBookmark(surah, ayah);
+    refreshBookmarks();
+  }
+
+  function handleUpdateNote(surah: number, ayah: number, note: string) {
+    updateBookmarkNote(surah, ayah, note);
+    refreshBookmarks();
+  }
+
+  function handleClearAll() {
+    clearAllBookmarks();
+    refreshBookmarks();
+  }
+
+  function handleAddTag(surah: number, ayah: number, tag: string) {
+    addTagToBookmark(surah, ayah, tag);
+    refreshBookmarks();
+  }
+
+  function handleRemoveTag(surah: number, ayah: number, tag: string) {
+    removeTagFromBookmark(surah, ayah, tag);
+    refreshBookmarks();
+  }
 </script>
 
 <div class="flex flex-col gap-6">
@@ -138,28 +171,16 @@
   {/if}
 
   <!-- Bookmarks section -->
-  {#if showBookmarks && recentBookmarks.length > 0}
+  {#if showBookmarks}
     <div class="animate-slide-up">
-      <p class="text-[10px] font-black uppercase tracking-wider text-ink/40 mb-2">Bookmarks Terbaru</p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {#each recentBookmarks as bm}
-          <a
-            href={`/quran/${bm.surah}`}
-            class="card-brutal-sm flex items-center gap-3 hover:bg-accent-pink/10 transition-colors duration-75
-                   active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
-          >
-            <span class="text-accent-pink text-lg">♥</span>
-            <div class="min-w-0 flex-1">
-              <p class="font-black text-xs truncate">{bm.surahName} : {bm.ayah}</p>
-              <p class="text-[9px] text-ink/40 font-bold">Surah {bm.surah}</p>
-            </div>
-          </a>
-        {/each}
-      </div>
-    </div>
-  {:else if showBookmarks}
-    <div class="card-brutal-sm text-center py-6">
-      <p class="text-sm font-bold text-ink/40">Tiada bookmarks lagi. Baca Al-Quran dan tanda ayat kegemaran anda.</p>
+      <BookmarksPanel
+        bookmarks={bookmarks}
+        onDelete={handleDeleteBookmark}
+        onUpdateNote={handleUpdateNote}
+        onClearAll={handleClearAll}
+        onAddTag={handleAddTag}
+        onRemoveTag={handleRemoveTag}
+      />
     </div>
   {/if}
 
@@ -191,6 +212,16 @@
             <span class="text-xs text-ink/30">·</span>
             <span class="text-xs text-ink/50 font-bold">{surah.versesCount} ayat</span>
           </div>
+          <!-- Reading progress bar -->
+          {#if progressMap.get(surah.number)}
+            {@const prog = progressMap.get(surah.number)!}
+            <div class="mt-1.5 flex items-center gap-2">
+              <div class="flex-1 h-1 bg-ink/10 rounded overflow-hidden">
+                <div class="h-full bg-accent-green rounded transition-[width] duration-300" style="width: {prog.percentage}%"></div>
+              </div>
+              <span class="text-[9px] font-black text-ink/40 shrink-0">{prog.percentage}%</span>
+            </div>
+          {/if}
         </div>
       </a>
     {:else}
@@ -203,6 +234,9 @@
   <!-- Stats footer -->
   <div class="flex items-center justify-between text-[10px] font-bold text-ink/40 border-t-2 border-ink/20 pt-3">
     <span>{filtered.length} surah ditunjukkan</span>
+    {#if completedCount > 0}
+      <span class="text-accent-green font-black">{completedCount}/114 surah completed</span>
+    {/if}
     <span>114 surah keseluruhan</span>
   </div>
 </div>

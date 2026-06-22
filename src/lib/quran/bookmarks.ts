@@ -11,6 +11,7 @@ export interface Bookmark {
   surahName: string;
   addedAt: number;
   note?: string;
+  tags?: string[];
 }
 
 export interface LastRead {
@@ -87,4 +88,110 @@ export function getLastRead(): LastRead | null {
   } catch {
     return null;
   }
+}
+
+/** Update a bookmark's note. */
+export function updateBookmarkNote(surah: number, ayah: number, note: string): void {
+  const bookmarks = getBookmarks();
+  const idx = bookmarks.findIndex((b) => b.surah === surah && b.ayah === ayah);
+  if (idx === -1) return;
+  bookmarks[idx] = { ...bookmarks[idx], note: note || undefined };
+  try {
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
+  } catch {}
+}
+
+/** Clear all bookmarks. */
+export function clearAllBookmarks(): void {
+  try {
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify([]));
+  } catch {}
+}
+
+/** Get bookmark count. */
+export function getBookmarkCount(): number {
+  return getBookmarks().length;
+}
+
+/** Add a tag to a bookmark. */
+export function addTagToBookmark(surah: number, ayah: number, tag: string): void {
+  const bookmarks = getBookmarks();
+  const idx = bookmarks.findIndex((b) => b.surah === surah && b.ayah === ayah);
+  if (idx === -1) return;
+  if (!bookmarks[idx].tags) bookmarks[idx].tags = [];
+  if (!bookmarks[idx].tags!.includes(tag)) {
+    bookmarks[idx].tags!.push(tag);
+  }
+  try {
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
+  } catch {}
+}
+
+/** Remove a tag from a bookmark. */
+export function removeTagFromBookmark(surah: number, ayah: number, tag: string): void {
+  const bookmarks = getBookmarks();
+  const idx = bookmarks.findIndex((b) => b.surah === surah && b.ayah === ayah);
+  if (idx === -1) return;
+  bookmarks[idx].tags = bookmarks[idx].tags?.filter((t) => t !== tag);
+  try {
+    localStorage.setItem(BOOKMARKS_KEY, JSON.stringify(bookmarks));
+  } catch {}
+}
+
+/** Get all unique tags across bookmarks. */
+export function getAllTags(): string[] {
+  const bookmarks = getBookmarks();
+  const tags = new Set<string>();
+  bookmarks.forEach((b) => b.tags?.forEach((t) => tags.add(t)));
+  return Array.from(tags).sort();
+}
+
+/** Get bookmarks filtered by tag. */
+export function getBookmarksByTag(tag: string): Bookmark[] {
+  return getBookmarks().filter((b) => b.tags?.includes(tag));
+}
+
+// === Reading Progress ===
+
+const PROGRESS_KEY = 'ruang_quran_progress';
+
+export interface ReadingProgress {
+  surah: number;
+  surahName: string;
+  lastVerse: number;
+  totalVerses: number;
+  percentage: number;
+  updatedAt: number;
+}
+
+/** Save reading progress for a surah. */
+export function saveReadingProgress(surah: number, surahName: string, lastVerse: number, totalVerses: number): void {
+  const progress = getAllProgress();
+  const idx = progress.findIndex(p => p.surah === surah);
+  const entry: ReadingProgress = {
+    surah, surahName, lastVerse, totalVerses,
+    percentage: Math.round((lastVerse / totalVerses) * 100),
+    updatedAt: Date.now(),
+  };
+  if (idx >= 0) {
+    progress[idx] = entry;
+  } else {
+    progress.push(entry);
+  }
+  try {
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+  } catch {}
+}
+
+/** Get all reading progress entries. */
+export function getAllProgress(): ReadingProgress[] {
+  try {
+    const raw = localStorage.getItem(PROGRESS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+
+/** Get reading progress for a specific surah. */
+export function getProgressForSurah(surah: number): ReadingProgress | null {
+  return getAllProgress().find(p => p.surah === surah) ?? null;
 }

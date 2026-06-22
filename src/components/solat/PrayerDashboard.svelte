@@ -6,7 +6,6 @@
   import { cachePrayerTimes, getCachedPrayerTimes, getTodayPrayers } from '../../lib/solat/storage';
   import { loadSettings, setZone as saveZone, type SolatSettings as SolatSettingsType } from '../../lib/solat/settings';
   import { applyAllAdjustments } from '../../lib/solat/offsets';
-  import ZoneSelector from './ZoneSelector.svelte';
 
   let zone = $state('SGR01');
   let today = $state<SolatDay | null>(null);
@@ -72,6 +71,11 @@
 
   // Elapsed time for current prayer
   let elapsedTime = $state('');
+
+  // View mode: today / weekly
+  let viewMode = $state<'today' | 'weekly'>('today');
+
+  let totalWeek = $derived(weekStats.reduce((sum, s) => sum + s.count, 0));
 
   const TRACKER_PRAYERS = [
     { key: 'fajr', label: 'Subuh', color: 'bg-accent-blue', textColor: 'text-accent-blue' },
@@ -489,7 +493,6 @@
     window.dispatchEvent(new CustomEvent('prayer-tracker-sync'));
   }
 
-  function handleZoneChange(newZone: string) { zone = newZone; saveZone(newZone); rawToday = null; today = null; fetchPrayerTimes(); }
   function isNextPrayer(key: string): boolean { return key === nextPrayerKey; }
   function isCurrentPrayer(key: string): boolean { return key === currentPrayerKey; }
   function formatDateDisplay(dateStr: string): string {
@@ -518,7 +521,111 @@
   });
 </script>
 
-<div class="flex flex-col gap-6">
+<!-- View mode tabs -->
+<div class="flex items-center gap-4 mb-3 border-b-2 border-ink/10">
+  <button
+    onclick={() => { viewMode = 'today'; }}
+    class="pb-2 text-xs font-black uppercase tracking-wider transition-colors border-b-4 -mb-[2px]
+           {viewMode === 'today' ? 'border-accent-blue text-accent-blue' : 'border-transparent text-ink/40 hover:text-ink/70'}"
+  >📅 Hari Ini</button>
+  <button
+    onclick={() => { viewMode = 'weekly'; }}
+    class="pb-2 text-xs font-black uppercase tracking-wider transition-colors border-b-4 -mb-[2px]
+           {viewMode === 'weekly' ? 'border-accent-yellow text-ink border-ink' : 'border-transparent text-ink/40 hover:text-ink/70'}"
+  >📊 Minggu Ini</button>
+</div>
+
+{#if viewMode === 'weekly'}
+<!-- ============ WEEKLY VIEW ============ -->
+<div class="flex flex-col gap-4 animate-[fadeSlideUp_0.3s_ease-out]">
+  <!-- Weekly hero -->
+  <div class="card-hero bg-accent-yellow text-ink relative overflow-hidden">
+    <div class="absolute top-0 left-0 right-0 h-2 bg-accent-pink"></div>
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-xs font-black uppercase tracking-wider opacity-60">Minggu Ini</p>
+        <p class="font-black text-5xl tabular-nums mt-1">{completedCount}<span class="text-2xl text-ink/40">/5</span></p>
+        <p class="text-xs font-black mt-1 opacity-60">solat hari ini</p>
+      </div>
+      <div class="text-right">
+        {#if streak > 0}
+          <p class="font-black text-5xl tabular-nums">{streak}</p>
+          <p class="text-xs font-black opacity-60">hari berturut 🔥</p>
+        {:else}
+          <p class="font-black text-3xl opacity-40">—</p>
+          <p class="text-xs font-black opacity-40">tiada streak lagi</p>
+        {/if}
+      </div>
+    </div>
+    <div class="mt-3 h-4 border-4 border-ink bg-white overflow-hidden">
+      <div class="h-full transition-all duration-300 {completedCount === 5 ? 'bg-accent-green' : 'bg-accent-blue'}" style="width: {(completedCount / 5) * 100}%"></div>
+    </div>
+  </div>
+
+  <!-- Weekly bar chart -->
+  <div class="card-compact">
+    <p class="text-xs font-black uppercase tracking-wider text-ink/40 mb-2">Statistik 7 Hari</p>
+    <div class="flex items-end gap-2 h-28">
+      {#each weekStats as stat}
+        <div class="flex-1 flex flex-col items-center gap-1">
+          <span class="text-xs font-black tabular-nums">{stat.count}/5</span>
+          <div class="w-full bg-accent-blue/80 transition-all duration-300 min-h-[4px] border-2 border-ink/30" style="height: {(stat.count / 5) * 75}px"></div>
+          <span class="text-[10px] font-black text-ink/50">{stat.day}</span>
+        </div>
+      {/each}
+    </div>
+    <div class="mt-3 pt-2 border-t-4 border-ink/20 flex items-center justify-between">
+      <span class="text-xs font-black text-ink/60">Jumlah minggu ini</span>
+      <span class="font-black text-lg tabular-nums">{totalWeek}<span class="text-xs text-ink/30">/35</span></span>
+    </div>
+  </div>
+
+  <!-- Today's tracker -->
+  <div class="border-t-4 border-ink pt-4">
+    <p class="text-[10px] font-black uppercase tracking-wider text-ink/40 mb-2">Tracker Hari Ini</p>
+    <div class="grid grid-cols-5 gap-2">
+      {#each TRACKER_PRAYERS as prayer}
+        {@const checked = todayRecord[prayer.key as keyof DayRecord]}
+        <button
+          onclick={() => toggleTracker(prayer.key)}
+          class="flex flex-col items-center justify-center gap-1 p-2 border-4 transition-all duration-75 min-h-[3.5rem]
+                 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none
+                 {checked ? `${prayer.color} text-white border-ink shadow-[4px_4px_0px_0px_#0D0D0D]` : 'bg-white text-ink border-ink/30 hover:border-ink shadow-[2px_2px_0px_0px_#0D0D0D] hover:shadow-[4px_4px_0px_0px_#0D0D0D]'}"
+          aria-label="Toggle {prayer.label}" aria-pressed={checked}
+        >
+          {#if checked}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M20 6L9 17l-5-5"/></svg>
+          {:else}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="opacity-30"><circle cx="12" cy="12" r="10"/></svg>
+          {/if}
+          <span class="text-[9px] font-black uppercase tracking-wider leading-none">{prayer.label}</span>
+        </button>
+      {/each}
+    </div>
+  </div>
+
+  <!-- Today's prayer times summary -->
+  {#if today}
+    <div class="card-compact">
+      <p class="text-xs font-black uppercase tracking-wider text-ink/40 mb-2">Waktu Hari Ini</p>
+      <div class="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        {#each PRAYER_KEYS as key}
+          {@const timeStr = today[key as keyof SolatDay] as string}
+          {@const display = PRAYER_DISPLAY[key]}
+          {#if display && timeStr}
+            <div class="text-center py-2 px-1 border-4 border-ink bg-white shadow-[3px_3px_0px_0px_#0D0D0D]">
+              <span class="text-base">{display.emoji}</span>
+              <p class="text-[9px] font-black uppercase tracking-wider text-ink/50">{display.label}</p>
+              <p class="font-mono font-black text-sm tabular-nums">{timeStr}</p>
+            </div>
+          {/if}
+        {/each}
+      </div>
+    </div>
+  {/if}
+</div>
+{:else}
+<div class="flex flex-col gap-4 animate-[fadeSlideUp_0.3s_ease-out]">
   <!-- === VISUAL NOTIFICATION TOAST === -->
   {#if visualToast.show}
     <div class="fixed top-16 left-4 right-4 md:left-20 md:right-auto md:max-w-md z-50 border-4 border-ink {visualToast.type === 'success' ? 'bg-accent-green' : 'bg-accent-blue'} text-white p-4 shadow-[8px_8px_0px_0px_#0D0D0D] animate-[slideIn_0.3s_ease-out]">
@@ -529,74 +636,85 @@
     </div>
   {/if}
 
-  <!-- === HERO: Clock + Date + Hijri === -->
-  <div class="text-center py-4">
-    <!-- Live Clock -->
-    <div class="flex items-center justify-center gap-3 mb-2">
+  <!-- === MERGED HERO: Countdown + Clock + Date === -->
+  <div class="card-hero bg-white relative overflow-hidden animate-[fadeSlideUp_0.3s_ease-out_0.05s_both]">
+    <!-- Accent stripe -->
+    <div class="absolute top-0 left-0 right-0 h-2 bg-accent-blue"></div>
+
+    <!-- Countdown section (primary) -->
+    {#if today}
+      <div class="relative">
+        <div class="flex items-center justify-between gap-3">
+          <div class="min-w-0">
+            <p class="text-[10px] font-black uppercase tracking-wider text-accent-blue">Solat Seterusnya</p>
+            <p class="font-black text-2xl sm:text-3xl text-ink">{nextPrayerName}</p>
+            {#if currentPrayerKey && currentPrayerKey !== nextPrayerKey}
+              <p class="text-[10px] font-bold text-ink/40 mt-0.5">{PRAYER_DISPLAY[currentPrayerKey]?.label} · {elapsedTime}</p>
+            {/if}
+          </div>
+          <div class="text-right shrink-0">
+            <p class="font-mono font-black text-3xl sm:text-4xl lg:text-5xl tabular-nums text-accent-blue tracking-tight leading-none">{countdown}</p>
+          </div>
+        </div>
+        <!-- Progress bar -->
+        <div class="mt-3 h-2 border-2 border-ink bg-canvas overflow-hidden">
+          <div class="h-full transition-all duration-1000 bg-accent-blue" style="width: {countdownProgress}%"></div>
+        </div>
+      </div>
+    {/if}
+
+    <!-- Clock section (secondary) -->
+    <div class="flex items-center justify-center gap-2 mt-4 pt-3 border-t-2 border-ink/10">
       <button
         onclick={() => { use24h = !use24h; saveClockPrefs(); }}
-        class="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 border-2 border-ink/20 hover:border-ink transition-colors {use24h ? 'bg-accent-yellow' : 'bg-white'}"
-        title="Toggle 24h/12h format"
+        class="text-[9px] font-black uppercase tracking-wider px-2 py-1 border-2 border-ink/20 hover:border-ink transition-colors shadow-[2px_2px_0px_0px_#0D0D0D] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none min-h-[2.75rem] flex items-center
+               {use24h ? 'bg-accent-yellow' : 'bg-white'}"
+        title="Toggle 24h/12h"
       >{use24h ? '24H' : '12H'}</button>
-      <p class="font-mono font-black text-5xl sm:text-6xl lg:text-7xl tabular-nums tracking-tight leading-none select-none">{currentTime || '--:--'}</p>
+      <p class="font-mono font-black text-4xl sm:text-5xl lg:text-6xl tabular-nums tracking-tight leading-none select-none text-ink/60">{currentTime || '--:--'}</p>
       <button
         onclick={() => { showSeconds = !showSeconds; saveClockPrefs(); }}
-        class="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 border-2 border-ink/20 hover:border-ink transition-colors {showSeconds ? 'bg-accent-yellow' : 'bg-white'}"
+        class="text-[9px] font-black uppercase tracking-wider px-2 py-1 border-2 border-ink/20 hover:border-ink transition-colors shadow-[2px_2px_0px_0px_#0D0D0D] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none min-h-[2.75rem] flex items-center
+               {showSeconds ? 'bg-accent-yellow' : 'bg-white'}"
         title="Toggle seconds"
       >{showSeconds ? 'SEC' : 'MIN'}</button>
     </div>
-    <!-- Date row -->
-    <p class="text-sm font-bold text-ink/60">{currentDate || 'Loading...'}</p>
-    <!-- Hijri date -->
-    <div class="mt-1 inline-flex items-center gap-2 px-3 py-1 border-2 border-ink bg-white">
-      <span class="text-xs font-black text-accent-blue" dir="rtl" lang="ar">{hijriDateAr}</span>
-      <span class="text-ink/20">|</span>
-      <span class="text-xs font-bold text-ink/60">{hijriDateStr}</span>
+
+    <!-- Date + Hijri row -->
+    <div class="flex items-center justify-center gap-3 mt-2 flex-wrap">
+      <p class="text-xs font-bold text-ink/50 tracking-wide">{currentDate || 'Loading...'}</p>
+      {#if hijriDateStr}
+        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 border-2 border-ink/20 bg-canvas text-[10px] font-bold">
+          <span class="text-accent-blue" dir="rtl" lang="ar">{hijriDateAr}</span>
+          <span class="text-ink/20">|</span>
+          <span class="text-ink/50">{hijriDateStr}</span>
+        </span>
+      {/if}
     </div>
     {#if isRamadan}
-      <p class="mt-2 text-xs font-black text-accent-pink animate-pulse">🌙 Ramadan Mubarak! Semoga ibadat diterima.</p>
+      <p class="mt-2 text-center text-xs font-black text-accent-pink animate-pulse">🌙 Ramadan Mubarak! Semoga ibadat diterima.</p>
     {/if}
-  </div>
 
-  <!-- === COUNTDOWN HERO CARD === -->
-  {#if today}
-    <div class="card-brutal-sm bg-accent-blue text-white relative overflow-hidden">
-      <!-- Progress bar background -->
-      <div class="absolute inset-0 bg-white/10" style="width: {countdownProgress}%"></div>
-      <div class="relative flex items-center justify-between">
-        <div>
-          <p class="text-[10px] font-black uppercase tracking-wider opacity-70">Solat Seterusnya</p>
-          <p class="font-black text-3xl">{nextPrayerName}</p>
-          {#if currentPrayerKey && currentPrayerKey !== nextPrayerKey}
-            <p class="text-[10px] font-bold opacity-60 mt-0.5">Solat semasa: {PRAYER_DISPLAY[currentPrayerKey]?.label} ({elapsedTime})</p>
-          {/if}
-        </div>
-        <div class="text-right">
-          <p class="font-mono font-black text-4xl sm:text-5xl tabular-nums">{countdown}</p>
-          <p class="text-[10px] font-bold opacity-70">{formatDateDisplay(today.date)}</p>
-        </div>
-      </div>
-      <!-- Action row -->
-      <div class="relative flex items-center gap-2 mt-3 pt-3 border-t border-white/20">
-        <button onclick={sharePrayerTimes} class="text-[10px] font-black uppercase tracking-wider px-3 py-1 border-2 border-white/30 hover:border-white hover:bg-white/10 transition-colors" disabled={!today}>
-          Kongsi {#if shareStatus}<span class="text-accent-yellow">✓ {shareStatus}</span>{/if}
-        </button>
-        <button onclick={() => (showNotifPanel = !showNotifPanel)} class="text-[10px] font-black uppercase tracking-wider px-3 py-1 border-2 border-white/30 hover:border-white hover:bg-white/10 transition-colors">
-          🔔 Pemberitahuan {#if notifPrefs.enabled}<span class="text-accent-yellow">AKTIF</span>{/if}
-        </button>
-        {#if qiblaBearing !== null}
-          <span class="ml-auto text-[10px] font-bold opacity-60 flex items-center gap-1" title="Qibla bearing from Malaysia">
-            <span style="display:inline-block; transform: rotate({qiblaBearing}deg);">↑</span>
-            Qibla {Math.round(qiblaBearing)}°
-          </span>
-        {/if}
-      </div>
+    <!-- Action row -->
+    <div class="flex items-center gap-2 mt-3 pt-3 border-t-2 border-ink/10">
+      <button onclick={sharePrayerTimes} class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1.5 border-2 border-ink/20 hover:border-ink hover:bg-canvas transition-colors shadow-[2px_2px_0px_0px_#0D0D0D] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none min-h-[2.75rem] flex items-center" disabled={!today}>
+        Kongsi {#if shareStatus}<span class="text-accent-green ml-1">✓ {shareStatus}</span>{/if}
+      </button>
+      <button onclick={() => (showNotifPanel = !showNotifPanel)} class="text-[9px] font-black uppercase tracking-wider px-2.5 py-1.5 border-2 border-ink/20 hover:border-ink hover:bg-canvas transition-colors shadow-[2px_2px_0px_0px_#0D0D0D] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none min-h-[2.75rem] flex items-center">
+        🔔 Pemberitahuan {#if notifPrefs.enabled}<span class="text-accent-green ml-1">AKTIF</span>{/if}
+      </button>
+      {#if qiblaBearing !== null}
+        <span class="ml-auto text-[10px] font-black text-ink/40 flex items-center gap-1" title="Qibla bearing">
+          <span style="display:inline-block; transform: rotate({qiblaBearing}deg);">↑</span>
+          Qibla {Math.round(qiblaBearing)}°
+        </span>
+      {/if}
     </div>
-  {/if}
+  </div>
 
   <!-- === PRAYER TIMES GRID === -->
   {#if loading && !today}
-    <div class="flex items-center justify-center py-12">
+    <div class="flex items-center justify-center py-8">
       <div class="font-black text-ink/40 uppercase tracking-wider animate-pulse">Loading prayer times...</div>
     </div>
   {:else if error && !today}
@@ -605,7 +723,8 @@
       <button onclick={fetchPrayerTimes} class="btn-brutal-sm mt-2 bg-white text-ink text-xs">Cuba Lagi</button>
     </div>
   {:else if today}
-    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+    <!-- Mobile: horizontal 2-col layout -->
+    <div class="flex flex-col gap-2 sm:hidden">
       {#each PRAYER_KEYS as key, i}
         {@const timeStr = today[key as keyof SolatDay] as string}
         {@const display = PRAYER_DISPLAY[key]}
@@ -613,58 +732,81 @@
         {@const isCurrent = isCurrentPrayer(key)}
         {@const tu = timeUntil(key)}
         <div
-          class="flex flex-col items-center justify-center p-3 border-2 transition-all duration-100 text-center
+          class="flex items-center gap-3 px-3 py-2.5 border-4 transition-all duration-100 animate-[fadeSlideUp_0.2s_ease-out_both]
                  {isCurrent && !isNext
                    ? 'border-accent-green bg-accent-green/10 shadow-[4px_4px_0px_0px_#0D0D0D]'
                    : isNext
-                     ? 'border-ink bg-accent-yellow shadow-[4px_4px_0px_0px_#0D0D0D]'
-                     : 'border-ink bg-white hover:bg-canvas'}"
+                     ? 'border-accent-blue bg-accent-blue/10 shadow-[4px_4px_0px_0px_#0D0D0D]'
+                     : 'border-ink bg-white shadow-[3px_3px_0px_0px_#0D0D0D]'}"
+          style="animation-delay: {i * 0.04}s"
         >
-          <span class="text-lg mb-0.5">{display.emoji}</span>
-          <span class="font-black text-[10px] uppercase tracking-wider">{display.label}</span>
-          <span class="font-mono font-black text-lg tabular-nums mt-1">{timeStr || '--:--'}</span>
-          {#if isCurrent}
-            <span class="mt-1 text-[8px] font-black uppercase bg-accent-green text-white px-1.5 py-0.5 border border-ink">SEKARANG</span>
-          {:else if isNext}
-            <span class="mt-1 text-[8px] font-black uppercase bg-accent-blue text-white px-1.5 py-0.5 border border-ink">SETERUSNYA</span>
-          {:else if tu}
-            <span class="mt-1 text-[8px] font-bold text-ink/40">dlm {tu}</span>
+          <span class="text-lg shrink-0">{display.emoji}</span>
+          <div class="flex-1 min-w-0">
+            <span class="font-black text-xs uppercase tracking-wider">{display.label}</span>
+            {#if isCurrent}
+              <span class="ml-1.5 text-[8px] font-black uppercase bg-accent-green text-white px-1.5 py-0.5 border border-ink">SEKARANG</span>
+            {:else if isNext}
+              <span class="ml-1.5 text-[8px] font-black uppercase bg-accent-blue text-white px-1.5 py-0.5 border border-ink">SETERUSNYA</span>
+            {/if}
+          </div>
+          <span class="font-mono font-black text-base tabular-nums shrink-0">{timeStr || '--:--'}</span>
+          {#if tu && !isCurrent && !isNext}
+            <span class="text-[9px] font-bold text-ink/40 shrink-0 w-12 text-right">dlm {tu}</span>
+          {:else}
+            <span class="shrink-0 w-12"></span>
           {/if}
         </div>
       {/each}
     </div>
-    <!-- Imsak + Zone -->
-    <div class="flex items-center justify-between text-[10px] font-bold text-ink/40 px-1">
-      {#if today?.imsak}<span>Imsak: {today.imsak}</span>{:else}<span></span>{/if}
-      <ZoneSelector currentZone={zone} onZoneChange={handleZoneChange} />
+    <!-- Desktop: centered grid -->
+    <div class="hidden sm:grid grid-cols-3 lg:grid-cols-6 gap-2">
+      {#each PRAYER_KEYS as key, i}
+        {@const timeStr = today[key as keyof SolatDay] as string}
+        {@const display = PRAYER_DISPLAY[key]}
+        {@const isNext = isNextPrayer(key)}
+        {@const isCurrent = isCurrentPrayer(key)}
+        {@const tu = timeUntil(key)}
+        <div
+          class="flex flex-col items-center justify-center p-2.5 sm:p-3 border-4 transition-all duration-100 text-center animate-[fadeSlideUp_0.2s_ease-out_both]
+                 {isCurrent && !isNext
+                   ? 'border-ink bg-accent-green/10 shadow-[6px_6px_0px_0px_#0D0D0D]'
+                   : isNext
+                     ? 'border-accent-blue bg-accent-blue/10 shadow-[6px_6px_0px_0px_#0D0D0D]'
+                     : 'border-ink bg-white hover:bg-canvas shadow-[4px_4px_0px_0px_#0D0D0D] hover:shadow-[6px_6px_0px_0px_#0D0D0D]'}"
+          style="animation-delay: {i * 0.04}s"
+        >
+          <span class="text-lg mb-0.5">{display.emoji}</span>
+          <span class="font-black text-[10px] uppercase tracking-wider">{display.label}</span>
+          <span class="font-mono font-black text-lg tabular-nums mt-0.5">{timeStr || '--:--'}</span>
+          {#if isCurrent}
+            <span class="mt-1 text-[8px] font-black uppercase bg-accent-green text-white px-1.5 py-0.5 border-2 border-ink shadow-[2px_2px_0px_0px_#0D0D0D]">SEKARANG</span>
+          {:else if isNext}
+            <span class="mt-1 text-[8px] font-black uppercase bg-accent-blue text-white px-1.5 py-0.5 border-2 border-ink shadow-[2px_2px_0px_0px_#0D0D0D]">SETERUSNYA</span>
+          {:else if tu}
+            <span class="mt-1 text-[9px] font-bold text-ink/40">dlm {tu}</span>
+          {/if}
+        </div>
+      {/each}
     </div>
+    <!-- Imsak info -->
+    {#if today?.imsak}
+      <div class="text-[10px] font-bold text-ink/40 px-1">
+        <span>Imsak: {today.imsak}</span>
+      </div>
+    {/if}
   {/if}
 
   <!-- === DAILY REMINDER === -->
   {#if dailyReminder}
-    <div class="card-brutal-sm bg-accent-yellow/20 border-accent-yellow">
-      <p class="text-[10px] font-black uppercase tracking-wider text-ink/40 mb-1">Peringatan Hari Ini</p>
-      <p class="text-sm font-bold italic">{dailyReminder}</p>
+    <div class="px-4 py-2.5 border-2 border-ink/20 bg-accent-yellow/10 animate-[fadeSlideUp_0.3s_ease-out_0.2s_both]">
+      <p class="text-[10px] font-black uppercase tracking-wider text-ink/40 mb-0.5">Peringatan Hari Ini</p>
+      <p class="text-sm font-bold italic leading-snug">{dailyReminder}</p>
     </div>
   {/if}
 
-  <!-- === WEEKLY PRAYER STATS === -->
-  <div class="border-t-2 border-ink/20 pt-4">
-    <p class="text-[10px] font-black uppercase tracking-wider text-ink/40 mb-2">Minggu Ini</p>
-    <div class="flex items-end gap-1 h-16">
-      {#each weekStats as stat}
-        <div class="flex-1 flex flex-col items-center gap-0.5">
-          <div class="w-full bg-accent-blue/80 transition-all duration-300 min-h-[2px]" style="height: {(stat.count / 5) * 48}px"></div>
-          <span class="text-[8px] font-black text-ink/50">{stat.count}/5</span>
-          <span class="text-[8px] font-black text-ink/30">{stat.day}</span>
-        </div>
-      {/each}
-    </div>
-  </div>
-
   <!-- === NOTIFICATION SETTINGS PANEL === -->
   {#if showNotifPanel}
-    <div class="border-4 border-ink bg-white p-4 shadow-[8px_8px_0px_0px_#0D0D0D] flex flex-col gap-4">
+    <div class="card-hero bg-white flex flex-col gap-4">
       <div class="flex items-center justify-between">
         <p class="text-xs font-black uppercase tracking-wider">Tetapan Pemberitahuan</p>
         <button onclick={() => (showNotifPanel = false)} class="text-sm font-black text-ink/40 hover:text-ink">✕</button>
@@ -736,46 +878,49 @@
   {/if}
 
   <!-- === PRAYER TRACKER === -->
-  <div class="border-t-4 border-ink pt-5 mt-1">
-    <div class="flex items-center justify-between mb-3">
-      <div>
-        <p class="text-[10px] font-black uppercase tracking-wider text-ink/40">Tracker Hari Ini</p>
-      </div>
+  <div class="border-t-4 border-ink pt-4 mt-1 animate-[fadeSlideUp_0.3s_ease-out_0.25s_both]">
+    <div class="flex items-center justify-between mb-2">
+      <p class="text-[10px] font-black uppercase tracking-wider text-ink/40">Tracker Hari Ini</p>
       <div class="flex items-center gap-2">
-        <span class="font-black text-lg tabular-nums">{completedCount}<span class="text-ink/30 text-sm">/5</span></span>
+        <span class="font-black text-lg tabular-nums">{completedCount}<span class="text-ink/30 text-xs">/5</span></span>
         {#if streak > 0}
           <span class="badge-brutal bg-accent-green text-white text-[10px]">{streak}🔥</span>
         {/if}
       </div>
     </div>
-    <div class="h-3 border-2 border-ink bg-white overflow-hidden mb-3">
+    <div class="h-3 border-4 border-ink bg-white overflow-hidden mb-2">
       <div class="h-full transition-all duration-300 {completedCount === 5 ? 'bg-accent-green' : 'bg-accent-blue'}" style="width: {(completedCount / 5) * 100}%"></div>
     </div>
-    <div class="grid grid-cols-5 gap-2">
+    <div class="grid grid-cols-5 gap-1.5">
       {#each TRACKER_PRAYERS as prayer}
         {@const checked = todayRecord[prayer.key as keyof DayRecord]}
         <button
           onclick={() => toggleTracker(prayer.key)}
-          class="flex flex-col items-center justify-center gap-1.5 p-2 sm:p-3 border-4 transition-all duration-75 min-h-[4rem]
+          class="flex flex-col items-center justify-center gap-1 p-1.5 sm:p-2.5 border-4 transition-all duration-75 min-h-[3.5rem]
                  active:translate-x-0.5 active:translate-y-0.5 active:shadow-none
                  {checked ? `${prayer.color} text-white border-ink shadow-[4px_4px_0px_0px_#0D0D0D]` : 'bg-white text-ink border-ink/30 hover:border-ink shadow-[2px_2px_0px_0px_#0D0D0D] hover:shadow-[4px_4px_0px_0px_#0D0D0D]'}"
           aria-label="Toggle {prayer.label}" aria-pressed={checked}
         >
           {#if checked}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M20 6L9 17l-5-5"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5"><path d="M20 6L9 17l-5-5"/></svg>
           {:else}
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="opacity-30"><circle cx="12" cy="12" r="10"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="opacity-30"><circle cx="12" cy="12" r="10"/></svg>
           {/if}
-          <span class="text-[9px] sm:text-[10px] font-black uppercase tracking-wider leading-none">{prayer.label}</span>
+          <span class="text-[8px] sm:text-[9px] font-black uppercase tracking-wider leading-none">{prayer.label}</span>
         </button>
       {/each}
     </div>
   </div>
 </div>
+{/if}
 
 <style>
   @keyframes slideIn {
     from { transform: translateY(-100%); opacity: 0; }
     to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>

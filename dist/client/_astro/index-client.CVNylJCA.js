@@ -1,0 +1,1 @@
+import{K as n,i as s,N as t}from"./render.GyI16JAT.js";globalThis.process??={};globalThis.process.env??={};function c(o){throw new Error("https://svelte.dev/e/lifecycle_outside_component")}function i(o){n===null&&c(),s(()=>{const e=t(o);if(typeof e=="function")return e})}function r(o){n===null&&c(),i(()=>()=>t(o))}export{r as a,i as o};

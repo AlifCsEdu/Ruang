@@ -10,10 +10,13 @@ export interface Surah {
 export interface Verse {
   number: number;
   text: string;          // Arabic text (Uthmani)
+  text_indopak?: string; // IndoPak script
+  text_tajweed?: string; // Tajweed-colored HTML
   verse_key?: string;    // e.g. "1:1"
   translations?: {
     text: string;
     language: string;
+    resource_name?: string;
   }[];
   words?: Word[];
   audio?: {
@@ -35,10 +38,15 @@ export interface ChapterResponse {
   surah: Surah;
 }
 
-export type VerseDisplayMode = 'standard' | 'word-by-word';
+export type ScriptType = 'uthmani' | 'indopak' | 'tajweed';
+export type VerseDisplayMode = 'standard' | 'word-by-word' | 'mushaf';
+export type WordBelowDisplay = 'none' | 'translation' | 'transliteration' | 'both';
 
 export interface AudioState {
   playing: boolean;
   currentVerse: number;
   autoAdvance: boolean;
+  repeatVerse: boolean;
+  volume: number;
+  speed: number;
 }

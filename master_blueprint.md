@@ -47,9 +47,28 @@
 - **Edge Caching:** Cache the JAKIM zone list and daily prayer times at the Cloudflare Edge (`s-maxage=86400`).
 - **Offline Fallback:** Store the current day's prayer times in `localStorage`.
 - **UI:** A prominent Neo-Brutalist "Next Prayer" countdown card on the Homepage dashboard.
+- **Architecture:** Decomposed `PrayerDashboard` orchestration layer with 5 extracted sub-components: `ClockHero`, `CountdownCard`, `PrayerGrid`, `NotificationPanel`, `PrayerTrackerSection`. Communicates via `CustomEvent` bus pattern.
+- **Enhanced Zone Selector:** Malaysian state flags (inline SVG), favorite zones (max 5, localStorage), keyboard navigation (arrow keys, Enter, Escape), animated auto-detect button.
+- **Weekly Prayer View:** 7-day prayer times table with today highlight, toggleable between "Hari Ini" and "Minggu Ini".
+- **Sunnah Times Inline:** Dhuha, Tahajjud, Sepertiga Malam, and Tengah Malam shown as colored chips in the prayer grid.
+- **Daily Reminders:** 30+ pool with Arabic text, Malay translation, and source attribution (Quran verses and Hadith).
+- **Share Card Image:** Canvas API generates 1080×1080 PNG Neo-Brutalist prayer card with native Web Share API (fallback: download).
+- **Notification System:** Configurable per-prayer browser notifications with sound types (chime/bell/adhan) and visual toast alerts.
+- **TV/Mosque Display Mode (`/solat/tv`):** Dedicated full-screen route for TVs, projectors, and tablets in mosques:
+  - Dark mode by default, landscape-optimized 2-column grid layout
+  - Iqamah timing (configurable delay per prayer), Adhan reminder with full-screen overlay
+  - Screen-saver prevention animation, Fullscreen API support
+  - URL-based configuration: `/solat/tv?zone=SGR01&mosque=Masjid+Al-Rahman&dark=true`
+  - Settings panel with share URL generation
+  - Friday mode banner, Ramadan auto-detection
+  - Responsive typography with `clamp()` and viewport units (720p to 4K)
 
 ### 📖 Al-Quran & 📚 Hadith
-- **Quran:** Quran.com API v4. Word-by-word Malay/English, Transliteration, Audio. 
+- **Quran:** Quran.com API v4. Word-by-word Malay/English, Transliteration, Audio.
+  - **Audio Player:** Fixed bottom-bar player with full transport controls (play/pause, stop, prev/next, seek, volume, speed, repeat, auto-advance). Triggered via "Main Semua" (Play All) button in controls bar and mushaf mode. Close button (✕) to dismiss.
+  - **Verse-Level Audio:** Fetched in parallel from Quran.com v4 recitations endpoint (`/recitations/{reciter}/by_chapter/{chapter}`) with fallback chain for audio URL extraction (CDN fields → recitation map).
+  - **Mushaf Mode Audio:** Compact controls bar with Play All, pause/resume, stop, and current verse indicator. Auto-scroll follows playing verse.
+  - **Script Support:** Uthmani, IndoPak, and Tajweed script types with proper rendering (tajweed HTML parsed to styled spans).
 - **Hadith:** Sunnah.com API. 
 - **Duas:** Static JSON (Hisnul Muslim) loaded via Astro 5 Content Layer API.
 - **UI:** High-contrast Neo-Brutalist Ayah/Hadith cards. Proper `dir="rtl"` and Tajweed line-heights.

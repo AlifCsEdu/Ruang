@@ -28,7 +28,7 @@ export type GeoResponse = GeoResult | GeoError;
  * Request the user's current location via browser Geolocation API.
  * Returns GPS coordinates or error information.
  */
-export function requestLocation(timeoutMs = 10_000): Promise<Coords> {
+export function requestLocation(timeoutMs = 10_000, maximumAge = 300_000): Promise<Coords> {
   return new Promise((resolve, reject) => {
     if (!('geolocation' in navigator)) {
       reject({ error: 'unavailable', message: 'Geolocation not supported' });
@@ -55,7 +55,7 @@ export function requestLocation(timeoutMs = 10_000): Promise<Coords> {
       {
         enableHighAccuracy: false,
         timeout: timeoutMs,
-        maximumAge: 300_000, // accept cached positions up to 5 minutes old
+        maximumAge,
       }
     );
   });
@@ -116,6 +116,74 @@ export async function detectZone(): Promise<GeoResponse> {
       message: err.message ?? 'Failed to detect location',
     };
   }
+}
+
+/**
+ * One-shot detect using cached position for fast startup.
+ */
+export async function autoDetectOnce(): Promise<GeoResponse> {
+  try {
+    const coords = await requestLocation(10_000, 600_000); // 10 min cache
+    const { zone, distanceKm } = getZoneFromCoords(coords.lat, coords.lng);
+    return { ok: true, coords, zone, distanceKm };
+  } catch (err: any) {
+    return {
+      ok: false,
+      error: err.error ?? 'unknown',
+      message: err.message ?? 'Failed to detect location',
+    };
+  }
+}
+
+/**
+ * Continuous auto-detect using watchPosition.
+ * Low-power: enableHighAccuracy=false, maximumAge=10min.
+ * Throttles callbacks to minimum interval (default 30 min).
+ * Returns cleanup function.
+ */
+export function startAutoDetect(
+  callback: (result: GeoResponse) => void,
+  options?: { minIntervalMs?: number }
+): () => void {
+  const minInterval = options?.minIntervalMs ?? 1_800_000; // 30 min default
+  let lastCallbackTime = 0;
+
+  if (!('geolocation' in navigator)) {
+    callback({ ok: false, error: 'unavailable', message: 'Geolocation not supported' });
+    return () => {};
+  }
+
+  const watchId = navigator.geolocation.watchPosition(
+    (pos) => {
+      const now = Date.now();
+      if (now - lastCallbackTime < minInterval) return;
+      lastCallbackTime = now;
+
+      const coords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+      const { zone, distanceKm } = getZoneFromCoords(coords.lat, coords.lng);
+      callback({ ok: true, coords, zone, distanceKm });
+    },
+    (err) => {
+      // Non-fatal: report error but keep watching
+      callback({
+        ok: false,
+        error: err.code === err.PERMISSION_DENIED ? 'denied'
+          : err.code === err.POSITION_UNAVAILABLE ? 'unavailable'
+          : err.code === err.TIMEOUT ? 'timeout'
+          : 'unknown',
+        message: err.message || 'Location error',
+      });
+    },
+    {
+      enableHighAccuracy: false,
+      maximumAge: 600_000, // 10 min cache
+      timeout: 15_000,
+    }
+  );
+
+  return () => {
+    navigator.geolocation.clearWatch(watchId);
+  };
 }
 
 /**

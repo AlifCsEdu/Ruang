@@ -31,6 +31,7 @@ const DEFAULT_PRAYER_OFFSETS: PrayerOffsets = {
 const DEFAULTS: SolatSettings = {
   zone: 'SGR01',
   recentZones: [],
+  favoriteZones: [],
   autoDetectLocation: false,
   lastKnownCoords: null,
   sunnahToggles: { ...DEFAULT_SUNNAH_TOGGLES },
@@ -145,5 +146,24 @@ export function addRecentZone(zone: string): void {
   const recents = settings.recentZones.filter((z) => z !== zone);
   recents.unshift(zone);
   settings.recentZones = recents.slice(0, 3);
+  saveSettings(settings);
+}
+
+// === Favorite Zones ===
+
+export function getFavoriteZones(): string[] {
+  return loadSettings().favoriteZones;
+}
+
+export function addFavoriteZone(zone: string): void {
+  const settings = loadSettings();
+  if (settings.favoriteZones.includes(zone)) return;
+  settings.favoriteZones = [...settings.favoriteZones, zone].slice(0, 5);
+  saveSettings(settings);
+}
+
+export function removeFavoriteZone(zone: string): void {
+  const settings = loadSettings();
+  settings.favoriteZones = settings.favoriteZones.filter((z) => z !== zone);
   saveSettings(settings);
 }

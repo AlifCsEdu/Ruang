@@ -1,12 +1,21 @@
 ---
+export const prerender = true;
+
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import DuaSearch from '../../components/duas/DuaSearch.svelte';
 
-const duas = await getCollection('duas').catch(() => []);
+let duas: Awaited<ReturnType<typeof getCollection<'duas'>>> = [];
+try {
+  duas = await getCollection('duas');
+} catch (e) {
+  console.error('[duas] Failed to load collection:', e);
+}
 
-// Get unique categories
-const categories = [...new Set(duas.map((d) => d.data.category))].sort();
+// Get unique categories (safe even when duas is empty)
+const categories = duas.length
+  ? [...new Set(duas.map((d) => d.data.category))].sort()
+  : [];
 ---
 
 <BaseLayout title="Duas — Ruang">
@@ -26,7 +35,7 @@ const categories = [...new Set(duas.map((d) => d.data.category))].sort();
 
     <!-- Duas List (server-rendered, zero JS) -->
     <div class="flex flex-col gap-4 mt-6" id="duas-list">
-      {duas.map((dua) => (
+      {duas.length > 0 ? duas.map((dua) => (
         <div class="card-brutal" data-category={dua.data.category} data-id={dua.id}>
           <!-- Header -->
           <div class="flex items-center justify-between mb-3 border-b-2 border-ink/10 pb-2">
@@ -53,7 +62,12 @@ const categories = [...new Set(duas.map((d) => d.data.category))].sort();
             Reference: {dua.data.reference}
           </div>
         </div>
-      ))}
+      )) : (
+        <div class="card-brutal text-center py-8">
+          <p class="font-black text-sm uppercase tracking-wider text-ink/50">No duas found</p>
+          <p class="text-xs text-ink/40 mt-1">Unable to load duas at this time. Please try again later.</p>
+        </div>
+      )}
     </div>
   </div>
 </BaseLayout>

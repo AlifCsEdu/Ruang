@@ -1,50 +1,44 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PrayerDashboard from '../../components/solat/PrayerDashboard.svelte';
+import ZoneHeader from '../../components/solat/ZoneHeader.svelte';
 ---
 
 <BaseLayout title="Waktu Solat — Ruang">
   <div class="max-w-4xl mx-auto px-4 py-8">
-    <!-- Page header with accent bar -->
-    <div class="mb-6">
-      <div class="flex items-center justify-between mb-2">
-        <h1 class="text-3xl font-black uppercase tracking-wider">Waktu Solat</h1>
-        <div class="flex items-center gap-2">
-          <a href="/tracker" class="btn-brutal-sm text-xs">📊 Tracker</a>
-          <a href="/settings" class="btn-brutal-sm text-xs">⚙️ Tetapan</a>
-        </div>
+    <!-- Page header -->
+    <div class="flex items-center justify-between mb-2">
+      <h1 class="text-3xl font-black uppercase tracking-wider">Waktu Solat</h1>
+      <div class="flex items-center gap-2">
+        <a href="/solat/tracker" class="btn-brutal-sm text-xs">📊 Tracker</a>
+        <a href="/solat/tetapan" class="btn-brutal-sm text-xs">⚙️ Tetapan</a>
       </div>
-      <p class="text-sm font-bold text-ink/60">Jadual solat harian, countdown, dan tracker untuk Malaysia.</p>
     </div>
+    <div class="h-1 w-16 bg-accent-yellow border-2 border-ink mb-6"></div>
 
-    <div class="accent-bar mb-6"></div>
+    <!-- Zone header -->
+    <ZoneHeader client:load />
 
-    <!-- Main prayer dashboard -->
-    <div class="card-hero">
-      <PrayerDashboard client:load>
-        <div class="text-center py-16 animate-pulse">
-          <p class="font-black text-ink/40 uppercase tracking-wider">Loading prayer times...</p>
-        </div>
-      </PrayerDashboard>
-    </div>
+    <!-- Prayer dashboard -->
+    <PrayerDashboard client:load />
 
-    <!-- Quick links footer -->
-    <div class="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-2">
-      <a href="/quran" class="card-brutal-sm text-center hover:bg-accent-green/10 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
-        <p class="text-lg mb-1">📖</p>
-        <p class="text-[10px] font-black uppercase tracking-wider">Al-Quran</p>
+    <!-- Quick links -->
+    <div class="mt-8 grid grid-cols-2 md:grid-cols-4 gap-3">
+      <a href="/quran" class="card-brutal-sm text-center py-4 hover:bg-accent-yellow/10 transition-colors">
+        <p class="text-2xl mb-1">📖</p>
+        <p class="text-xs font-black uppercase tracking-wider">Al-Quran</p>
       </a>
-      <a href="/duas" class="card-brutal-sm text-center hover:bg-accent-pink/10 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
-        <p class="text-lg mb-1">🤲</p>
-        <p class="text-[10px] font-black uppercase tracking-wider">Doa</p>
+      <a href="/duas" class="card-brutal-sm text-center py-4 hover:bg-accent-yellow/10 transition-colors">
+        <p class="text-2xl mb-1">🤲</p>
+        <p class="text-xs font-black uppercase tracking-wider">Doa</p>
       </a>
-      <a href="/tasbih" class="card-brutal-sm text-center hover:bg-accent-blue/10 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
-        <p class="text-lg mb-1">📿</p>
-        <p class="text-[10px] font-black uppercase tracking-wider">Tasbih</p>
+      <a href="/tasbih" class="card-brutal-sm text-center py-4 hover:bg-accent-yellow/10 transition-colors">
+        <p class="text-2xl mb-1">📿</p>
+        <p class="text-xs font-black uppercase tracking-wider">Tasbih</p>
       </a>
-      <a href="/hijri" class="card-brutal-sm text-center hover:bg-accent-yellow/20 transition-colors duration-75 active:translate-x-0.5 active:translate-y-0.5 active:shadow-none">
-        <p class="text-lg mb-1">📅</p>
-        <p class="text-[10px] font-black uppercase tracking-wider">Kalendar</p>
+      <a href="/hijri" class="card-brutal-sm text-center py-4 hover:bg-accent-yellow/10 transition-colors">
+        <p class="text-2xl mb-1">📅</p>
+        <p class="text-xs font-black uppercase tracking-wider">Takwim</p>
       </a>
     </div>
   </div>

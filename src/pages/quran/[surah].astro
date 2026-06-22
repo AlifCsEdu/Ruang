@@ -19,9 +19,32 @@ if (!surah) {
 <BaseLayout title={`${surah.englishName} — Al-Quran`}>
   <div class="max-w-4xl mx-auto px-4 py-8 pb-32">
     <!-- Navigation -->
-    <div class="flex items-center justify-between mb-4">
-      <a href="/quran" class="btn-brutal-sm text-sm">← Semua Surah</a>
-      <div class="flex items-center gap-2">
+    <div class="flex items-center justify-between mb-4 gap-2 flex-wrap">
+      <a href="/quran" class="btn-brutal-sm text-sm shrink-0">← Semua Surah</a>
+
+      <!-- Quick-jump dropdown -->
+      <label class="relative inline-flex items-center gap-1.5">
+        <span class="text-xs font-black uppercase tracking-wider text-ink/50 hidden sm:inline">Surah:</span>
+        <select
+          class="btn-brutal-sm text-sm bg-white border-ink cursor-pointer w-40 sm:w-48"
+          aria-label="Jump to surah"
+          data-surah-select
+        >
+          {SURAHS.map((s) => (
+            <option value={s.number} selected={s.number === num}>
+              {s.number}. {s.englishName}
+            </option>
+          ))}
+        </select>
+      </label>
+      <script>
+        document.querySelector('[data-surah-select]')?.addEventListener('change', (e) => {
+          const val = (e.target as HTMLSelectElement).value;
+          if (val) window.location.href = `/quran/${val}`;
+        });
+      </script>
+
+      <div class="flex items-center gap-2 shrink-0">
         {num > 1 && (
           <a href={`/quran/${num - 1}`} class="btn-brutal-sm text-sm" title="Surah sebelumnya">← {SURAHS[num - 2]?.englishName ?? 'Prev'}</a>
         )}
@@ -41,9 +64,17 @@ if (!surah) {
       </div>
 
       <div class="flex flex-col items-center gap-3">
-        <!-- Surah number -->
-        <div class="w-16 h-16 bg-ink text-white flex items-center justify-center font-black text-2xl shadow-[4px_4px_0px_0px_#FFD500]">
-          {num}
+        <!-- Surah number (ornamental circular badge) -->
+        <div class="relative flex items-center justify-center" style="width: 4rem; height: 4rem;">
+          <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; inset: 0;">
+            <circle cx="32" cy="32" r="30" stroke="currentColor" stroke-width="2.5" fill="var(--color-ink, #0D0D0D)" />
+            <circle cx="32" cy="32" r="24" stroke="var(--color-accent-yellow, #FFD500)" stroke-width="1.5" stroke-dasharray="3 3" opacity="0.6" fill="none" />
+            <circle cx="32" cy="4" r="2" fill="var(--color-accent-yellow, #FFD500)" opacity="0.7" />
+            <circle cx="32" cy="60" r="2" fill="var(--color-accent-yellow, #FFD500)" opacity="0.7" />
+            <circle cx="4" cy="32" r="2" fill="var(--color-accent-yellow, #FFD500)" opacity="0.7" />
+            <circle cx="60" cy="32" r="2" fill="var(--color-accent-yellow, #FFD500)" opacity="0.7" />
+          </svg>
+          <span class="relative text-white font-black text-2xl">{num}</span>
         </div>
 
         <div>
@@ -57,15 +88,20 @@ if (!surah) {
 
       <!-- Bismillah -->
       {num !== 1 && num !== 9 && (
-        <div class="mt-6 pt-4 border-t-4 border-ink/10">
-          <p class="arabic-text text-xl" dir="rtl">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>
-          <p class="text-xs text-ink/40 font-bold mt-1">Dengan nama Allah, Yang Maha Pemurah, lagi Maha Mengasihani</p>
+        <div class="mt-6">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="flex-1 h-0.5 bg-accent-blue/30"></div>
+            <div class="w-2 h-2 bg-accent-blue rotate-45"></div>
+            <div class="flex-1 h-0.5 bg-accent-blue/30"></div>
+          </div>
+          <p class="arabic-text text-2xl" dir="rtl" style="line-height: 2.2;">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>
+          <p class="text-xs text-ink/50 font-bold italic mt-2">In the name of Allah, the Most Gracious, the Most Merciful</p>
         </div>
       )}
     </div>
 
     <!-- Surah Reader (Svelte 5 island) -->
-    <SurahReader chapter={num} client:load>
+    <SurahReader chapter={num} client:only="svelte">
       <div class="text-center py-16 animate-pulse">
         <p class="font-black text-ink/40 uppercase tracking-wider">Memuatkan ayat-ayat...</p>
       </div>

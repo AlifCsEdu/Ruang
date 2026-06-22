@@ -1,0 +1,41 @@
+---
+import '../../styles/global.css';
+import TvDashboard from '../../components/solat/TvDashboard.svelte';
+
+// Parse URL params for initial TV config — passed as data attribute
+const rawUrl = Astro.url;
+const params = rawUrl.searchParams;
+const initConfig = JSON.stringify({
+  zone: params.get('zone') ?? '',
+  mosque: params.get('mosque') ?? '',
+  dark: params.get('dark') ?? '',
+  '24h': params.get('24h') ?? '',
+  seconds: params.get('seconds') ?? '',
+  font: params.get('font') ?? '',
+  hijri: params.get('hijri') ?? '',
+  sunnah: params.get('sunnah') ?? '',
+  adhan: params.get('adhan') ?? '',
+  jumua: params.get('jumua') ?? '',
+});
+---
+
+<!doctype html>
+<html lang="ms">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Waktu Solat — Skrin Penuh</title>
+    <link rel="preconnect" href="https://api.waktusolat.app" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { width: 100vw; height: 100vh; overflow: hidden; background: #0D0D0D; font-family: 'Inter', system-ui, sans-serif; }
+    </style>
+  </head>
+  <body>
+    <TvDashboard client:only="svelte" data-init-config={initConfig} />
+  </body>
+</html>

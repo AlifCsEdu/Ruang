@@ -3,6 +3,8 @@
  * Reciters, translations, and Juz data from Quran.com API v4.
  */
 
+import type { ScriptType, WordBelowDisplay } from './types';
+
 export interface Reciter {
   id: number;
   name: string;
@@ -17,16 +19,23 @@ export interface Translation {
 }
 
 export const RECITERS: Reciter[] = [
-  { id: 7, name: 'Mishary Rashid Alafasy', arabicName: 'مشاري راشد العفاسي' },
+  { id: 7, name: 'Mishary Rashid Alafasy', arabicName: 'مشاري راشد العفاسي', style: 'Murattal' },
   { id: 1, name: 'Abdul Basit (Murattal)', arabicName: 'عبد الباسط عبد الصمد', style: 'Murattal' },
   { id: 3, name: 'Abdul Rahman Al-Sudais', arabicName: 'عبد الرحمن السديس' },
   { id: 4, name: 'Abu Bakr Al-Shatri', arabicName: 'أبو بكر الشاطري' },
+  { id: 5, name: 'Hani Ar-Rifai', arabicName: 'هاني الرفاعي' },
+  { id: 8, name: 'Maher Al-Muaiqly', arabicName: 'ماهر المعيقلي' },
+  { id: 9, name: 'Mahmoud Khalil Al-Husary', arabicName: 'محمود خليل الحصري' },
+  { id: 10, name: 'Mohamed Siddiq Al-Minshawi', arabicName: 'محمد صديق المنشاوي', style: 'Mujawwad' },
+  { id: 12, name: 'Saad Al-Ghamdi', arabicName: 'سعد الغامدي' },
+  { id: 161, name: 'Yasser Al-Dosari', arabicName: 'ياسر الدوسري' },
+  { id: 168, name: 'Ahmad Al-Ajmi', arabicName: 'أحمد العجمي' },
 ];
 
 export const TRANSLATIONS: Translation[] = [
-  { id: 131, name: 'Dr. Mustafa Khattab (The Clear Quran)', language: 'en' },
   { id: 20, name: 'Sahih International', language: 'en' },
-  { id: 174, name: 'Abdullah Muhammad Basmeih', language: 'ms' },
+  { id: 22, name: 'A. Yusuf Ali', language: 'en' },
+  { id: 39, name: 'Abdullah Muhammad Basmeih', language: 'ms' },
 ];
 
 /** Number of verses per page for paginated mode. */
@@ -34,6 +43,38 @@ export const VERSES_PER_PAGE = 50;
 
 /** Surahs with ≤ this many verses will be loaded entirely. */
 export const SHORT_SURAH_THRESHOLD = 50;
+
+/** Font size controls (rem units) */
+export const FONT_SIZE_MIN = 1.25;
+export const FONT_SIZE_MAX = 3.5;
+export const FONT_SIZE_DEFAULT = 1.75;
+export const FONT_SIZE_STEP = 0.25;
+
+/** Playback speed options */
+export const PLAYBACK_SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
+/** Script/font style options */
+export const SCRIPT_TYPES: { id: ScriptType; name: string; description: string }[] = [
+  { id: 'uthmani', name: 'Uthmani', description: 'Standard script with full diacritics' },
+  { id: 'indopak', name: 'IndoPak', description: 'Popular in South & Southeast Asia' },
+  { id: 'tajweed', name: 'Tajweed', description: 'Color-coded pronunciation rules' },
+];
+
+/** Word-by-word below-word display options */
+export const WORD_BELOW_OPTIONS: { id: WordBelowDisplay; label: string }[] = [
+  { id: 'none', label: 'None' },
+  { id: 'translation', label: 'Terjemahan' },
+  { id: 'transliteration', label: 'Rumi' },
+  { id: 'both', label: 'Both' },
+];
+
+/** localStorage keys */
+export const LS_FONT_SIZE = 'ruang_quran_font_size';
+export const LS_SCRIPT_TYPE = 'ruang_quran_script_type';
+export const LS_WORD_BELOW = 'ruang_quran_word_below';
+export const LS_DISPLAY_MODE = 'ruang_quran_display_mode';
+export const LS_AUDIO_PREFS = 'ruang_quran_audio_prefs';
+export const LS_NIGHT_MODE = 'ruang_quran_night_mode';
 
 /** Juz data: start surah and ayah for each of 30 Juz. */
 export const JUZ_DATA = [

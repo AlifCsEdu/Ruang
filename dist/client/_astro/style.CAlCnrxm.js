@@ -1,0 +1,1 @@
+import{t as p}from"./disclose-version.DZz_Ujks.js";import{ab as t,h as i}from"./render.GyI16JAT.js";globalThis.process??={};globalThis.process.env??={};function y(s,e,a,l){var o=s[t];if(i||o!==e){var r=p(e);(!i||r!==s.getAttribute("style"))&&(r==null?s.removeAttribute("style"):s.style.cssText=r),s[t]=e}return l}export{y as s};

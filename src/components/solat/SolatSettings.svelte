@@ -5,8 +5,14 @@
   import { getCachedPrayerTimes, getTodayPrayers, getTomorrowPrayers } from '../../lib/solat/storage';
   import { calculateSunnahTimes } from '../../lib/solat/sunnah';
 
+  interface Props {
+    embedded?: boolean;
+  }
+
+  let { embedded = false }: Props = $props();
+
   let settings = $state<SolatSettingsType | null>(null);
-  let expanded = $state(false);
+  let expanded = $state(embedded); // auto-expand when embedded
 
   type SettingsTab = 'sunnah' | 'advanced' | 'zone';
   let activeTab = $state<SettingsTab>('sunnah');
@@ -125,6 +131,7 @@
 </script>
 
 <div class="flex flex-col gap-2">
+  {#if !embedded}
   <!-- Expand/collapse header -->
   <button
     onclick={() => expanded = !expanded}
@@ -134,8 +141,10 @@
     <span>Tetapan</span>
     <span class="text-lg">{expanded ? '▲' : '▼'}</span>
   </button>
+  {/if}
 
   {#if expanded}
+    {#if !embedded}
     <!-- Tab buttons -->
     <div class="flex border-2 border-ink">
       <button
@@ -149,12 +158,13 @@
                {activeTab === 'advanced' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-canvas'}"
       >Lanjutan</button>
     </div>
+    {/if}
 
     <!-- Tab content -->
     <div class="border-2 border-ink bg-white p-3">
 
       <!-- === SUNNAH TAB === -->
-      {#if activeTab === 'sunnah'}
+      {#if activeTab === 'sunnah' || embedded}
         <div class="flex items-center justify-between mb-2">
           <h4 class="font-black text-xs uppercase tracking-wider">Waktu Sunnah</h4>
           {#if sunnah?.isJumuah && toggles?.jumuah}
@@ -195,9 +205,10 @@
             {/each}
           </div>
         {/if}
+      {/if}
 
       <!-- === ADVANCED TAB === -->
-      {:else if activeTab === 'advanced' && settings}
+      {#if (activeTab === 'advanced' || embedded) && settings}
         <div class="flex flex-col gap-2">
           <!-- Calculation Rules -->
           <div class="border-2 border-ink">
