@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="404 — Page Not Found | Ruang">
+  <div class="flex flex-col items-center justify-center min-h-[60vh] px-4 text-center">
+    <!-- Big brutalist 404 card -->
+    <div class="card-brutal bg-accent-yellow max-w-lg w-full">
+      <h1 class="text-8xl font-black text-ink leading-none mb-4">404</h1>
+      <p class="text-xl font-bold text-ink mb-2">Page Not Found</p>
+      <p class="text-ink/70 mb-8">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a
+          href="/"
+          class="btn-brutal bg-accent-blue text-white border-ink text-center no-underline"
+        >
+          Back to Home
+        </a>
+        <a
+          href="/quran"
+          class="btn-brutal bg-white text-ink border-ink text-center no-underline"
+        >
+          Read Quran
+        </a>
+      </div>
+    </div>
+
+    <!-- Fun Arabic reminder -->
+    <p class="mt-8 text-2xl font-[family-name:var(--font-arabic)] text-ink/50">
+      إِنَّ مَعَ الْعُسْرِ يُسْرًا
+    </p>
+    <p class="mt-1 text-sm text-ink/40">Indeed, with hardship comes ease — (94:6)</p>
+  </div>
+</BaseLayout>

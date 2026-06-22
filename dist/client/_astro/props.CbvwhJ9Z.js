@@ -1,1 +1,0 @@
-globalThis.process??={};globalThis.process.env??={};function s(n,i,v,e){var t=e,r=!0,u=()=>(r&&(r=!1,t=e),t),a;a=n[i],a===void 0&&e!==void 0&&(a=u());var l;return l=()=>{var f=n[i];return f===void 0?u():(r=!0,f)},l}export{s as p};

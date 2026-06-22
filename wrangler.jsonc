@@ -1,0 +1,13 @@
+{
+  // Worker name (shown in Cloudflare dashboard & workers.dev URL)
+  "name": "ruang",
+
+  // Required for Svelte 5 SSR (uses node:async_hooks)
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Observability — enables Workers Logs in Cloudflare dashboard
+  "observability": {
+    "enabled": true
+  }
+}
