@@ -7,6 +7,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "preview:cf": "astro build && wrangler dev",
+    "deploy": "astro build && wrangler deploy",
     "check": "astro check",
     "postinstall": "node scripts/patch-astro-fs.mjs"
   },
@@ -21,7 +23,6 @@
   "dependencies": {
     "@astrojs/cloudflare": "^13.7.0",
     "@astrojs/svelte": "^8.1.2",
-    "@libsql/client": "^0.17.3",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.4.5",
     "idb-keyval": "^6.2.5",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@types/node": "^25.9.2",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "wrangler": "^4.0.0"
   }
 }
