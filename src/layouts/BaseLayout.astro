@@ -31,6 +31,11 @@ const { title = 'Ruang — Your Muslim Companion' } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
+    <!-- Preconnect for upstream APIs (reduces latency on first fetch) -->
+    <link rel="preconnect" href="https://api.waktusolat.app" />
+    <link rel="preconnect" href="https://api.qurancdn.com" />
+    <link rel="preconnect" href="https://api.quran.com" />
+
     <!-- Inter font for UI (subset latin) -->
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap"

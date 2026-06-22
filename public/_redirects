@@ -1,0 +1,4 @@
+# Friendly short URL redirects
+/r /solat 302
+/q /quran 302
+/d /duas 302
