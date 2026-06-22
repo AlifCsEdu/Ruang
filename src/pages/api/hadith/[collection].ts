@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import type { Hadith } from '../../../lib/hadith/types';
+import { checkRateLimit, rateLimitResponse } from '../../../lib/rateLimit';
 
 export const prerender = false;
 
@@ -53,7 +54,11 @@ const COLLECTION_NAMES: Record<string, string> = {
   tirmidhi: 'tirmidhi', nasai: 'nasai', ibnmajah: 'ibnmajah', malik: 'malik',
 };
 
-export const GET: APIRoute = async ({ params, url }) => {
+export const GET: APIRoute = async ({ params, url, request }) => {
+  // Rate limit: 60 requests per minute per IP
+  const rl = await checkRateLimit(request);
+  if (!rl.allowed) return rateLimitResponse(rl.retryAfter);
+
   const collection = params.collection as string;
   if (!COLLECTION_NAMES[collection]) {
     return new Response(JSON.stringify({ error: 'Unknown collection' }), {

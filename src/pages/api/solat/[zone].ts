@@ -1,9 +1,14 @@
 import type { APIRoute } from 'astro';
 import type { SolatResponse, SolatDay } from '../../lib/solat/types';
+import { checkRateLimit, rateLimitResponse } from '../../../lib/rateLimit';
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ params }) => {
+export const GET: APIRoute = async ({ params, request }) => {
+  // Rate limit: 60 requests per minute per IP
+  const rl = await checkRateLimit(request);
+  if (!rl.allowed) return rateLimitResponse(rl.retryAfter);
+
   const { zone } = params;
 
   if (!zone || !/^[A-Z]{3}\d{2}$/i.test(zone)) {

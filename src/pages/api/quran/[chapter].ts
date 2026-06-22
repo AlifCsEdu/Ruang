@@ -2,13 +2,18 @@ import type { APIRoute } from 'astro';
 import type { Verse, Word } from '../../../lib/quran/types';
 import { SURAHS } from '../../../lib/quran/surahs';
 import { VERSES_PER_PAGE, SHORT_SURAH_THRESHOLD, TRANSLATIONS } from '../../../lib/quran/constants';
+import { checkRateLimit, rateLimitResponse } from '../../../lib/rateLimit';
 
 export const prerender = false;
 
 // Audio CDN base URL — prepend to relative audio paths from the API
 const AUDIO_CDN = 'https://verses.quran.com/';
 
-export const GET: APIRoute = async ({ params, url }) => {
+export const GET: APIRoute = async ({ params, url, request }) => {
+  // Rate limit: 60 requests per minute per IP
+  const rl = await checkRateLimit(request);
+  if (!rl.allowed) return rateLimitResponse(rl.retryAfter);
+
   const chapterNum = Number(params.chapter);
 
   if (!chapterNum || chapterNum < 1 || chapterNum > 114) {
